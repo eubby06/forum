@@ -1,0 +1,16 @@
+@import url("../vendor/css/bootstrap.css");
+body{font-size:12px;}
+ul#statistics{list-style: none; margin:0px;}
+.pagination{margin:0px;}
+.table thead th{background:#3A87AD; color:white; }
+.table a.title{font-weight:bold; color:#3A87AD; text-decoration: none; font-size:14px;}
+.breadcrumb{margin:5px;}
+h2{padding:5px; font-size:28px; line-height:15px;}
+a.company-name{color:black;}
+input[type="text"], textarea, label{font-size:12px;}
+.table thead th{background:#999;}
+.avatar_thumb {
+    border-radius: 2px 2px 2px 2px;
+}
+.conversations .alert{padding:3px 5px; margin:5px;}
+.conversations .table a.title{color:black; font-weight:normal; font-size:12px;}
