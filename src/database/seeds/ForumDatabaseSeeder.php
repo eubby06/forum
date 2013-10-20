@@ -9,7 +9,6 @@ class ForumDatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		//$this->call('ChannelSeeder');
 		$this->call('GroupSeeder');
 	}
 

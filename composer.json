@@ -14,7 +14,8 @@
     "autoload": {
         "classmap": [
             "src/migrations",
-            "src/database/seeds"
+            "src/database/seeds",
+            "src/commands"
         ],
         "psr-0": {
             "Eubby": "src/"

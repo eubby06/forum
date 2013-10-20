@@ -1,5 +1,7 @@
 <?php namespace Eubby\Forum;
 
+use ForumCommand;
+use Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class ForumServiceProvider extends ServiceProvider {
@@ -22,6 +24,8 @@ class ForumServiceProvider extends ServiceProvider {
 
 		include __DIR__.'/../../start.php';
 		include __DIR__.'/../../routes.php';
+
+		$this->commands('forum.command');
 	}
 
 	/**
@@ -31,7 +35,10 @@ class ForumServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		$this->app->bind('forum.command', function()
+		{
+			return new ForumCommand();
+		});
 	}
 
 	/**
