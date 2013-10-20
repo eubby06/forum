@@ -12,5 +12,7 @@ input[type="text"], textarea, label{font-size:12px;}
 .avatar_thumb {
     border-radius: 2px 2px 2px 2px;
 }
+.online{color:green;}
+.offline{color:red;}
 .conversations .alert{padding:3px 5px; margin:5px;}
 .conversations .table a.title{color:black; font-weight:normal; font-size:12px;}

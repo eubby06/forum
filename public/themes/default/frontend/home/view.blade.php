@@ -18,7 +18,7 @@
                     @else
                     Users in this conversation:
                         @foreach ($conversation->getPrivateSubscribers() as $subscriber)
-                           <a href="#">{{ $subscriber->username }}</a> <i class="icon-remove"></i>
+                           <a href="{{ route('members_profile', $subscriber->username) }}">{{ $subscriber->username }}</a> <i class="icon-remove"></i>
                         @endforeach
                     @endif
                 </span>
@@ -33,12 +33,13 @@
 
                 <div class="row-fluid">
                     <div class="avatar span1">
-                        <div class="thumbnail">
-                            {{ $post->user->getGravatar(array('img' => true, 's' => 64)) }}</div>
+                        <div class="thumbnail"><a href="{{ route('members_profile', $post->user->username) }}">
+                            {{ $post->user->getGravatar(array('img' => true, 's' => 64)) }}
+                        </a></div>
                     </div>
                     <div class="post span11 well well-small">
                         <div class="info">
-                            <a class="poster"><strong>{{ $post->user->username }}</strong></a>
+                            <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ $post->user->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
                             <a class="poster pull-right">quote | edit | delete</a> 
                         </div>
@@ -57,12 +58,13 @@
                 {{ Form::open(array('route' => array('post_reply', $conversation->slug))) }}
                 <div class="row-fluid">
                     <div class="avatar span1">
-                        <div class="thumbnail">
-                            {{ Auth::user()->getGravatar(array('img' => true, 's' => 64)) }}</div>
+                        <div class="thumbnail"><a href="{{ route('members_profile', Auth::user()->username) }}">
+                            {{ Auth::user()->getGravatar(array('img' => true, 's' => 64)) }}
+                        </a></div>
                     </div>
                     <div class="post span11 well well-small">
                         <div class="info">
-                            <a class="poster"><strong>{{ Auth::user()->username }}</strong></a>
+                            <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ Auth::user()->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
                             <input type="submit" class="btn pull-right" value="Post a Reply">
                         </div>
@@ -78,7 +80,7 @@
                 @else
                 <div class="row-fluid">
                     <div class="avatar span1">
-                        <div class="thumbnail"><img src="{{ theme_asset('images/avatars/0.png') }}"></div>
+                        <div class="thumbnail"><a href="{{ route('members_profile', Auth::user()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
                     </div>
                     @if (Auth::check() && !$user_allowed_to_comment)
                         <div class="post span11 well well-small">

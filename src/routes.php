@@ -1,5 +1,16 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the Closure to execute when that URI is requested.
+|
+*/
+
 Route::get('forum/user/logout', array(
 	'as' 	=> 'logout',
 	'uses' 	=> 'Eubby\Controllers\UserController@getLogout'
@@ -55,7 +66,7 @@ Route::get('forum/{slug}', array(
 	'uses' 	=> 'Eubby\Controllers\ConversationController@getView'
 	));
 
-Route::get('forum/conversation/start', array(
+Route::get('forum/conversation/start/{username?}', array(
 	'as' 	=> 'start_conversation',
 	'uses' 	=> 'Eubby\Controllers\ConversationController@getStart'
 	));
@@ -103,6 +114,26 @@ Route::post('forum/settings/password', array(
 Route::get('forum/settings/notifications', array(
 	'as' 	=> 'notifications',
 	'uses' 	=> 'Eubby\Controllers\SettingsController@getNotifications'
+	));
+
+Route::get('members', array(
+	'as' 	=> 'members',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getIndex'
+	));
+
+Route::get('members/edit/{id}', array(
+	'as' 	=> 'members_edit',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getEdit'
+	));
+
+Route::get('members/delete/{id}', array(
+	'as' 	=> 'members_delete',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getDelete'
+	));
+
+Route::get('members/profile/{username}', array(
+	'as' 	=> 'members_profile',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getProfile'
 	));
 
 Route::group(array('prefix' => 'admin', 'before' => 'auth'), function()

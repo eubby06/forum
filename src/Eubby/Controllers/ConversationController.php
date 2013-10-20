@@ -4,14 +4,22 @@ use View, Input, Redirect, Auth;
 
 class ConversationController extends BaseController
 {
-	public function getStart()
+	public function getStart($username = null)
 	{
 		if (!Auth::check()) return Redirect::route('login');
+
+		$private_user = false;
+
+		if (!is_null($username))
+		{
+			$private_user = $this->user->where('username',$username)->first();
+		}
 
 		$channels = $this->channel->getKeyValuePair();
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.conversation.create")
-									->with('channels', $channels);
+									->with('channels', $channels)
+									->with('private_user', $private_user);
 
 		return $this->layout;
 	}

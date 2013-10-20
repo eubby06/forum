@@ -16,6 +16,17 @@
                         </div>
                         <hr />
                         <div class="post">
+                         @if ($private_user)
+                            <p> {{ Auth::user()->getGravatar(array('img' => true, 's' => 22)) }} 
+                                <a href="#"><strong>{{ Auth::user()->username }}</strong></a> and 
+                                {{ $private_user->getGravatar(array('img' => true, 's' => 22)) }} 
+                                <a href="#"><strong>{{ $private_user->username }}</strong></a> will be able to view this conversation. 
+                                <a class="btn btn-small" href="#">Change</a>
+                            </p>
+                            {{ Form::hidden('private_user', $private_user->id) }}
+                            <hr />
+                        @endif
+
                         {{ Form::select('channel_id', $channels) }}
                         {{ Form::text('title', '', array('class' => 'span12', 'placeholder' => 'Enter a conversation title...')) }}
                         {{ Form::textarea('post', '', array('class' => 'span12')) }}
