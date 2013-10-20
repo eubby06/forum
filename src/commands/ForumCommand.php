@@ -37,6 +37,7 @@ class ForumCommand extends Command {
 	 */
 	public function fire()
 	{
+		$this->call('asset:publish',array('--bench'=>'eubby/forum'));
 		$this->call('migrate', array('--bench'=>'eubby/forum'));
 		$this->call('db:seed', array('--class'=>'ForumDatabaseSeeder'));
 		$this->info('Successfully Completed Installation of Forum');
