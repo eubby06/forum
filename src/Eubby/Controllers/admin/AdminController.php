@@ -7,6 +7,7 @@ use Eubby\Models\Conversation;
 use Eubby\Models\Post;
 use Eubby\Models\Session;
 use Eubby\Models\Group;
+use Eubby\Models\settings;
 
 class AdminController extends Controller {
 
@@ -22,6 +23,8 @@ class AdminController extends Controller {
 
 	protected $group 			= null;
 
+	protected $settings 		= null;
+
 	protected $layout 			= null;
 
 	public function __construct(
@@ -30,7 +33,8 @@ class AdminController extends Controller {
 		Conversation $conversation, 
 		Post $post, 
 		Session $session,
-		Group $group)
+		Group $group,
+		Settings $settings)
 	{
 		$this->user 		= ($user) ? $user : new User;
 		$this->channel 		= ($channel) ? $channel : new Channel;
@@ -38,6 +42,7 @@ class AdminController extends Controller {
 		$this->post 		= ($post) ? $post : new Post;
 		$this->session 		= ($session) ? $session : new Session;
 		$this->group 		= ($group) ? $group : new Group;
+		$this->settings 	= ($settings) ? $settings : new Settings;
 		$this->theme 		= Config::get('forum::theme.name');
 		$this->layout 		= "theme::{$this->theme}.layouts.admin";
 	}

@@ -53,6 +53,7 @@ class ChannelsController extends AdminController
 										->with('channel', $channel)
 										->with('permissions', $permissions_data)
 										->with('groups', $this->group->defaults);
+
 		return $this->layout;
 	}
 
@@ -104,7 +105,7 @@ class ChannelsController extends AdminController
 						'can_view' => (isset($permissions_data['can_view'])) ? 1 : 0,
 						'can_reply' => (isset($permissions_data['can_reply'])) ? 1 : 0,
 						'can_start' => (isset($permissions_data['can_start'])) ? 1 : 0,
-						'can_moderate' => (isset($permissions_data['can_start'])) ? 1 : 0
+						'can_moderate' => (isset($permissions_data['can_moderate'])) ? 1 : 0
 						);
 
 			(is_null($row)) ? $channel->permissions()->attach($id, $data) : $row->pivot->update($data);

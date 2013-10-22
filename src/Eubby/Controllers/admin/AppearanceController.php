@@ -6,7 +6,19 @@ class AppearanceController extends AdminController
 {
 	public function getIndex()
 	{
-		$this->layout->content = View::make("theme::{$this->theme}.backend.appearance");
+		$settings = $this->settings->find(1);
+
+		$this->layout->content = View::make("theme::{$this->theme}.backend.appearance")
+										->with('settings', $settings);
 		return $this->layout;
+	}
+
+	public function postIndex()
+	{
+		$settings = $this->settings->find(1);
+
+		$settings->update(array('theme' => Input::get('theme')));
+
+		return Redirect::back()->with('success', 'Theme has been selected.');
 	}
 }

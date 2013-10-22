@@ -148,9 +148,24 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth'), function()
 			'uses' 	=> 'Eubby\Controllers\Admin\AppearanceController@getIndex'
 			));
 
+		Route::post('appearance', array(
+			'as' 	=> 'admin_appearance_post',
+			'uses' 	=> 'Eubby\Controllers\Admin\AppearanceController@postIndex'
+			));
+
 		Route::get('settings', array(
 			'as' 	=> 'admin_settings',
 			'uses' 	=> 'Eubby\Controllers\Admin\SettingsController@getIndex'
+			));
+
+		Route::get('settings/write', array(
+			'as' 	=> 'admin_settings_write',
+			'uses' 	=> 'Eubby\Controllers\Admin\SettingsController@getWrite'
+			));
+
+		Route::post('settings/update', array(
+			'as' 	=> 'admin_settings_update',
+			'uses' 	=> 'Eubby\Controllers\Admin\SettingsController@postUpdate'
 			));
 
 		Route::get('channels', array(

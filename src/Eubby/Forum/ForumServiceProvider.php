@@ -39,6 +39,12 @@ class ForumServiceProvider extends ServiceProvider {
 		{
 			return new ForumCommand();
 		});
+
+		//settings file
+		$this->app->bind('config.path', function()
+		{
+			return $this->guessPackagePath() . '/config/';
+		});
 	}
 
 	/**
@@ -50,5 +56,4 @@ class ForumServiceProvider extends ServiceProvider {
 	{
 		return array();
 	}
-
 }

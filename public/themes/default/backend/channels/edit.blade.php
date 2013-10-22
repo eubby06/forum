@@ -45,12 +45,13 @@
 								   			</thead>
 								   			<tbody>
 								   				@foreach ($groups as $gname => $gpermissions)
+		
 								   					<tr>
 									   					<td><strong>{{ ucfirst($gname) }}</strong></td>
 									   					@foreach ($gpermissions as $key => $value)
-		
+												
 									   					<?php $val = str_replace('can',$gname,$key) ?>
-									   					<td><input type="checkbox" value="{{ $val }}" name="permission[]" {{ ($permissions[$gname][$key]) ? 'checked="checked"' : '' }} {{ ($value) ? '' : 'disabled'}} /></td>
+									   					<td><input type="checkbox" value="{{ $val }}" name="permission[]" {{ ($permissions[$gname][$key] == 1) ? 'checked="checked"' : '' }} {{ ($value) ? '' : 'disabled'}} /></td>
 									   					@endforeach
 									   				</tr>
 
@@ -66,10 +67,10 @@
 
 									   					<tr>
 										   					<td>--- {{ ucfirst($subgroup->name) }}</td>
-										   					<td>{{ Form::checkbox('permission[]', $sname.'_view', ($permissions[$sname]['can_view']) ? true : false ) }}</td>
-										   					<td>{{ Form::checkbox('permission[]', $sname.'_reply', ($permissions[$sname]['can_reply']) ? true : false ) }}</td>
-										   					<td>{{ Form::checkbox('permission[]', $sname.'_start', ($permissions[$sname]['can_start']) ? true : false ) }}</td>
-										   					<td>{{ Form::checkbox('permission[]', $sname.'_moderate', ($permissions[$sname]['can_moderate']) ? true : false ) }}</td>
+										   					<td>{{ Form::checkbox('permission[]', $sname.'_view', ($permissions[$sname]['can_view'] == 1) ? true : false ) }}</td>
+										   					<td>{{ Form::checkbox('permission[]', $sname.'_reply', ($permissions[$sname]['can_reply'] == 1) ? true : false ) }}</td>
+										   					<td>{{ Form::checkbox('permission[]', $sname.'_start', ($permissions[$sname]['can_start'] == 1) ? true : false ) }}</td>
+										   					<td>{{ Form::checkbox('permission[]', $sname.'_moderate', ($permissions[$sname]['can_moderate'] ==1) ? true : false ) }}</td>
 										   				</tr>
 										   				@endforeach
 									   				@endif

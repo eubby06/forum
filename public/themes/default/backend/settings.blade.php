@@ -9,35 +9,26 @@
 
                 <div class="row-fluid">
                     <div class="post span12 well">
-
+                    		{{ Form::open(array('route' => 'admin_settings_update')) }}
 							<fieldset> 
 								<legend>Forum Settings</legend>
 								<table class="table">
 									<tr>
 								   		<td>Forum title</td>
-								   		<td>{{ Form::text('title') }}</td>
+								   		<td>{{ Form::text('title', $settings->title) }}</td>
 								   	</tr>
 								    <tr>
 								   		<td>Default forum language</td>
-								   		<td>{{ Form::select('language', array('en' => 'English')) }}</td>
+								   		<td>{{ Form::select('language', array('en' => 'English','cn' => 'Chinese'), $settings->language) }}</td>
 								   	</tr>
-								   <tr>
-								   		<td>Forum header</td>
-								   		<td>
-							   			<label>
-							   				{{ Form::radio('header') }} Show the forum title in the header </label>
-							   			<label>
-							   				{{ Form::radio('header') }} Show an image in the header</label>
-								   		</td>
-								   	</tr>
-								   <tr>
+									   <tr>
 								   		<td>Home page</td>
 								   		<td>
 								   		<span class="muted">Choose what people will see when they first visit your forum.</span>
 							   			<label>
-							   				{{ Form::radio('homepage') }} Show the conversation list by default</label>
+							   				{{ Form::radio('home_page[]', 'show_conversation_list', ($settings->home_page == 'show_conversation_list') ? true : false) }} Show the conversation list by default</label>
 							   			<label>
-							   				{{ Form::radio('homepage') }} Show the channel list by default</label>
+							   				{{ Form::radio('home_page[]', 'show_channel_list', ($settings->home_page == 'show_channel_list') ? true : false) }} Show the channel list by default</label>
 							   			</td>
 								   	</tr>
 								   <tr>
@@ -45,11 +36,9 @@
 								   		<td>								   		
 								   			<span class="muted">Customize how users can become members of your forum.</span>
 							   			<label>
-							   				{{ Form::radio('registration') }} Close registration</label>
+							   				{{ Form::radio('registration[]', 'close', ($settings->registration == 'close') ? true : false) }} Close registration</label>
 							   			<label>
-							   				{{ Form::radio('registration') }} Open registration</label>
-							   			<label>
-							   				{{ Form::radio('registration') }} Require users to confirm their email address</label>
+							   				{{ Form::radio('registration[]', 'open', ($settings->registration == 'open') ? true : false) }} Open registration</label>
 							   			</td>
 								   	</tr>
 								   <tr>
@@ -57,25 +46,19 @@
 								   		<td>								   		
 								   			<span class="muted">Make member and online list visible to:</span>
 							   			<label>
-							   				{{ Form::radio('privacy') }} Registered members</label>
+							   				{{ Form::radio('member_privacy[]', 'members', ($settings->member_privacy == 'members') ? true : false) }} Registered members</label>
 							   			<label>
-							   				{{ Form::radio('privacy') }} Everyone</label>
+							   				{{ Form::radio('member_privacy[]', 'everyone', ($settings->member_privacy == 'everyone') ? true : false) }} Everyone</label>
 							   			</td>
-								   	</tr>
-								   <tr>
-								   		<td>Member groups</td>
-								   		<td>								   		
-								   			<span class="muted">Groups can be used to categorize members and give them certain privileges.</span><br />
-							   			<a href="#">Manage Groups</a></td>
 								   	</tr>
 								   <tr>
 								   		<td>Editing permissions</td>
 								   		<td>								   			
 								   			<span class="muted">Allow members to edit their own posts:</span>
 							   			<label>
-							   				{{ Form::radio('edit_permission') }} Forever</label>
+							   				{{ Form::radio('editing_permission[]', 'forever', ($settings->editing_permission == 'forever') ? true : false) }} Forever</label>
 							   			<label>
-							   				{{ Form::radio('edit_permission') }} Until someone replies</label></td>
+							   				{{ Form::radio('editing_permission[]', 'until_someone_reply', ($settings->editing_permission == 'until_someone_reply') ? true : false) }} Until someone replies</label></td>
 								   	</tr>
 								   	<tr>
 								   		<td></td>
@@ -85,6 +68,7 @@
 	                        	</table>
                         	</fieldset>
 
+                        	{{ Form::close() }}
                     </div>
                 </div>
 
