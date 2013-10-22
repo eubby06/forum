@@ -12,7 +12,7 @@ class UserController extends BaseController
 		//logout from session
 		Auth::logout();
 
-		return Redirect::back()->with('success', 'You have logged out successfully.');		
+		return Redirect::route('home')->with('success', 'You have logged out successfully.');		
 	}
 	
 	public function getJoin()

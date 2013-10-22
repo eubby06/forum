@@ -16,31 +16,27 @@
             </div>
         </div>
         <hr />
+        
     <ul class="nav nav-tabs">
-        <li  class="active"><a href="{{ route('members_profile', $member->username) }}">About</a></li>
+        <li><a href="{{ route('members_profile', $member->username) }}">About</a></li>
         <li><a href="{{ route('members_activity', $member->username) }}">Recent Activities</a></li>
-        <li><a href="{{ route('members_stats', $member->username) }}">Statistics</a></li>
+        <li class="active"><a href="{{ route('members_stats', $member->username) }}">Statistics</a></li>
     </ul>
 
     <table class="table table-striped">
         <tbody>
-        @if (Auth::check() && Auth::user()->username == $member->username)
             <tr>
-                <td colspan="2"><a href="{{ route('settings') }}" class="btn btn-primary">Edit Profile</a></td>
-            </tr>
-        @endif
-
-        @if (!is_null($profile))
-            <tr>
-                <td width="5%">Location</td>
-                <td width="75%">{{ $profile->location }}</td>
+                <td width="5%">Posts</td>
+                <td width="75%">{{ $member->stats->posts_count }}</td>
             </tr>
             <tr>
-                <td width="5%">About</td>
-                <td width="75%">{{ $profile->about }}</td>
+                <td width="5%">Conversation Started</td>
+                <td width="75%">{{ $member->stats->conversations_started_count }}</td>
             </tr>
-        @endif
-        
+            <tr>
+                <td width="5%">Conversation Participated</td>
+                <td width="75%">{{ $member->stats->conversations_participated_count }}</td>
+            </tr>
         </tbody>
     </table>
 

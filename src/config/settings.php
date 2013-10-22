@@ -2,8 +2,14 @@
 
 return array(
 
-	'theme' => '##theme##',
+	'installed' => '##installed##',
 
-	'title' => '##title##',
-	
+	'version' 	=> '1.0',
+
+	'developer' => 'Yonanne Remedio',
+
+	'license'  	=> 'Unknown',
+
+	'repository'  	=> 'https://github.com/eubby06/forum'
+
 	);

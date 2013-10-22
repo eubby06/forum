@@ -2,6 +2,8 @@
 
 use Eubby\Models\Base;
 use Eubby\Models\User;
+use Eubby\Models\ForumStats;
+use Eubby\Models\UserStats;
 
 class Conversation extends Base
 {
@@ -20,8 +22,29 @@ class Conversation extends Base
 
 		static::created(function($conversation)
 		{
+			//create history
+			$history = new History();
+			$history->user_id = $conversation->user_id;
+			$history->message = 'started a conversation --title-start--'.$conversation->title. '--title-end-- under --name-start--'.$conversation->channel->name.'--name-end--';
+			$conversation->histories()->save($history);
+
+			//update convesation table
 			$conversation->channel->increment('conversations_count');
+
+			//update forum statistics
+			$fstat = ForumStats::find(1);
+			$fstat->increment('count_conversations');
+
+			//update user statistics
+			$ustat = UserStats::where('user_id',$conversation->user_id)->first();
+			$ustat->increment('posts_count');
+			$ustat->increment('conversations_started_count');
 		});
+	}
+
+	public function histories()
+	{
+		return $this->morphMany('Eubby\Models\History', 'historable');
 	}
 
 	protected function setSlugAttribute($slug)

@@ -11,7 +11,7 @@ class CreateStatisticsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::table('statistics', function($table)
+		Schema::table('user_stats', function($table)
 		{
 			$table->create();
 			$table->increments('id');
@@ -19,7 +19,7 @@ class CreateStatisticsTable extends Migration {
 			$table->integer('posts_count')->default(0);
 			$table->integer('conversations_started_count')->default(0);
 			$table->integer('conversations_participated_count')->default(0);
-			$table->integer('first_post_id')->default(0);
+			$table->integer('last_post_id');
 			$table->timestamp('joined');
 		});
 	}
@@ -31,7 +31,7 @@ class CreateStatisticsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('statistics');
+		Schema::drop('user_stats');
 	}
 
 }

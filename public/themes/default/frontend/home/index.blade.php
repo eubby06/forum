@@ -6,7 +6,7 @@
                     <tr>
                         <td width="2%"><i class="icon-star-empty"></i></td>
                         <td width="15%"><span class="alert alert-info">{{ $conversation->channel->name }}</span></td>
-                        <td width="48%"><a class="title" href="{{ route('view_conversation', $conversation->slug) }}">{{ $conversation->title }}</a></td>
+                        <td width="40%"><a class="title" href="{{ route('view_conversation', $conversation->slug) }}">{{ $conversation->title }}</a></td>
                         <td width="15%"><i class="icon-comment"></i> {{ $conversation->posts_count }} replies 
                             @if ($conversation->unread)
                             <span class="alert alert-error">{{ $conversation->unread }} new</span>

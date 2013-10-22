@@ -1,6 +1,7 @@
 <?php namespace Eubby\Models;
 
 use Eubby\Models\Base;
+use Eubby\Models\ForumStats;
 
 class Channel extends Base
 {
@@ -16,6 +17,18 @@ class Channel extends Base
 		'name' 			=> 'required|unique:channels', 
 		'slug' 			=> 'required|unique:channels',
 		'description' 	=> 'required');
+
+	public static function boot()
+	{
+		parent::boot();
+
+		static::created(function($channel)
+		{
+			//update forum statistics
+			$fstat = ForumStats::find(1);
+			$fstat->increment('count_channels');
+		});
+	}
 
 	public function getKeyValuePair()
 	{

@@ -136,6 +136,16 @@ Route::get('members/profile/{username}', array(
 	'uses' 	=> 'Eubby\Controllers\MembersController@getProfile'
 	));
 
+Route::get('members/stats/{username}', array(
+	'as' 	=> 'members_stats',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getStats'
+	));
+
+Route::get('members/activity/{username}', array(
+	'as' 	=> 'members_activity',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getActivity'
+	));
+
 Route::group(array('prefix' => 'admin', 'before' => 'auth'), function()
 {
 		Route::get('/', array(

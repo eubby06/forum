@@ -95,11 +95,6 @@ class User extends Base implements UserInterface, RemindableInterface {
 		return (in_array('Moderator', $this->listGroups()));
 	}
 
-	public function groups()
-	{
-		return $this->belongsToMany('Eubby\Models\Group', 'user_groups');
-	}
-
 	public function listGroups()
 	{
 		$groups = array();
@@ -125,16 +120,6 @@ class User extends Base implements UserInterface, RemindableInterface {
 		return (is_null($log)) ? null : $log->updated_at;
 	}
 
-	public function posts()
-	{
-		return $this->hasMany('Eubby\Models\Post', 'user_id');
-	}
-
-	public function readposts()
-	{
-		return $this->belongstoMany('Eubby\Models\Post', 'read_posts')->withPivot('created_at','updated_at');
-	}
-
 	public function logVisit(Conversation $conversation)
 	{
 		$log = $this->readposts()->where('post_id','=',$conversation->first_post_id)->first();
@@ -148,11 +133,6 @@ class User extends Base implements UserInterface, RemindableInterface {
 		$log->pivot->update(array('updated_at' => date('Y-m-d H:i:s')));
 	}
 
-	public function session()
-	{
-		return $this->hasOne('Eubby\Models\Session', 'user_id');
-	}
-
 	public function isOnline()
 	{
 		return $this->session()->where('active',1)->first() ? true : false;
@@ -163,6 +143,9 @@ class User extends Base implements UserInterface, RemindableInterface {
 		return (is_null($this->session)) ? 'never' : $this->session->updated_at->diffForHumans();
 	}
 
+	///////////////////////////////////////////////////
+	// ------------ RELATIONSHIPS ----------- START //
+
 	public function profile()
 	{
 		return $this->hasOne('Eubby\Models\Profile', 'user_id');
@@ -172,6 +155,39 @@ class User extends Base implements UserInterface, RemindableInterface {
 	{
 		return $this->belongsToMany('Eubby\Models\Conversation', 'conversations_subscribers');
 	}
+
+	public function session()
+	{
+		return $this->hasOne('Eubby\Models\Session', 'user_id');
+	}
+
+	public function posts()
+	{
+		return $this->hasMany('Eubby\Models\Post', 'user_id');
+	}
+
+	public function readposts()
+	{
+		return $this->belongstoMany('Eubby\Models\Post', 'read_posts')->withPivot('created_at','updated_at');
+	}
+
+	public function groups()
+	{
+		return $this->belongsToMany('Eubby\Models\Group', 'user_groups');
+	}
+
+	public function stats()
+	{
+		return $this->hasOne('Eubby\Models\UserStats', 'user_id');
+	}
+
+	public function histories()
+	{
+		return $this->hasMany('Eubby\Models\History', 'user_id');
+	}
+	 // ------------ RELATIONSHIPS ----------- END //
+	////////////////////////////////////////////////
+
 
 	public function hasSubscription($conversation_id)
 	{

@@ -18,10 +18,46 @@ class MembersController extends BaseController
 		if(is_null($username)) return Redirect::back();
 
 		$member = $this->user->where('username',$username)->first();
+		$profile = ($member->profile) ? $member->profile : null;
 
 		if (!is_null($member))
 		{
 			$this->layout->content = View::make("theme::{$this->theme}.frontend.user.profile")
+										->with('member', $member)
+										->with('profile', $profile);
+
+			return $this->layout;
+		}
+
+		return Redirect::back()->withErrors('Member could not be found.');
+	}
+
+	public function getStats($username = null)
+	{
+		if(is_null($username)) return Redirect::back();
+
+		$member = $this->user->where('username',$username)->first();
+
+		if (!is_null($member))
+		{
+			$this->layout->content = View::make("theme::{$this->theme}.frontend.user.stats")
+										->with('member', $member);
+
+			return $this->layout;
+		}
+
+		return Redirect::back()->withErrors('Member could not be found.');
+	}
+
+	public function getActivity($username = null)
+	{
+		if(is_null($username)) return Redirect::back();
+
+		$member = $this->user->where('username',$username)->first();
+
+		if (!is_null($member))
+		{
+			$this->layout->content = View::make("theme::{$this->theme}.frontend.user.activities")
 										->with('member', $member);
 
 			return $this->layout;

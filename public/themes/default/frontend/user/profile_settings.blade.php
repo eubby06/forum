@@ -20,6 +20,7 @@
                 <td>Notifications</td>
                 <td>
                     <ul class="unstyled">
+                        
                         @foreach ($select_notifications as $key => $text)
                             @if (in_array($key, $user_notifications))
                             <li>

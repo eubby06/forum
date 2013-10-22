@@ -7,7 +7,9 @@ use Eubby\Models\Conversation;
 use Eubby\Models\Post;
 use Eubby\Models\Session;
 use Eubby\Models\Group;
-use Eubby\Models\settings;
+use Eubby\Models\Settings;
+use Eubby\Models\UserStats;
+use Eubby\Models\ForumStats;
 
 class AdminController extends Controller {
 
@@ -25,6 +27,10 @@ class AdminController extends Controller {
 
 	protected $settings 		= null;
 
+	protected $user_stats 		= null;
+
+	protected $forum_stats 		= null;
+
 	protected $layout 			= null;
 
 	public function __construct(
@@ -34,7 +40,9 @@ class AdminController extends Controller {
 		Post $post, 
 		Session $session,
 		Group $group,
-		Settings $settings)
+		Settings $settings,
+		UserStats $user_stats,
+		ForumStats $forum_stats)
 	{
 		$this->user 		= ($user) ? $user : new User;
 		$this->channel 		= ($channel) ? $channel : new Channel;
@@ -43,6 +51,8 @@ class AdminController extends Controller {
 		$this->session 		= ($session) ? $session : new Session;
 		$this->group 		= ($group) ? $group : new Group;
 		$this->settings 	= ($settings) ? $settings : new Settings;
+		$this->user_stats 	= ($user_stats) ? $user_stats : new UserStats;
+		$this->forum_stats 	= ($forum_stats) ? $forum_stats : new ForumStats;
 		$this->theme 		= Config::get('forum::theme.name');
 		$this->layout 		= "theme::{$this->theme}.layouts.admin";
 	}

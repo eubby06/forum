@@ -6,6 +6,7 @@ class SettingsController extends BaseController
 {
 	public function getProfile()
 	{
+
 		if (!Auth::check()) return Redirect::route('login');
 
 		$user = Auth::user();
@@ -38,7 +39,7 @@ class SettingsController extends BaseController
 		$profile = ($user->profile) ? $user->profile : new \Eubby\Models\Profile;
 
 		$profile->user_id = $user->id;
-		$profile->notifications = serialize(Input::get('notification'));
+		$profile->notifications = (Input::get('notification')) ? serialize(Input::get('notification')) : null;
 		$profile->location = Input::get('location');
 		$profile->about = Input::get('about');
 		$profile->privacy = (Input::get('privacy')) ? 1 : 0;

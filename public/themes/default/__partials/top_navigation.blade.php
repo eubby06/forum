@@ -6,7 +6,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="{{ route('home') }}">Flash eSports Forum</a>
+          <a class="brand" href="{{ route('home') }}">{{ Eubby\Models\Settings::find(1)->title }}</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
               @if (Auth::guest())

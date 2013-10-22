@@ -17,30 +17,30 @@
         </div>
         <hr />
     <ul class="nav nav-tabs">
-        <li  class="active"><a href="{{ route('members_profile', $member->username) }}">About</a></li>
-        <li><a href="{{ route('members_activity', $member->username) }}">Recent Activities</a></li>
+        <li><a href="{{ route('members_profile', $member->username) }}">About</a></li>
+        <li class="active"><a href="{{ route('members_activity', $member->username) }}">Recent Activities</a></li>
         <li><a href="{{ route('members_stats', $member->username) }}">Statistics</a></li>
     </ul>
 
     <table class="table table-striped">
         <tbody>
-        @if (Auth::check() && Auth::user()->username == $member->username)
-            <tr>
-                <td colspan="2"><a href="{{ route('settings') }}" class="btn btn-primary">Edit Profile</a></td>
-            </tr>
-        @endif
+            @if ($member->histories)
+                @foreach ($member->histories as $history)
+                <tr>
+                    <td width="5%" colspan="2">
 
-        @if (!is_null($profile))
-            <tr>
-                <td width="5%">Location</td>
-                <td width="75%">{{ $profile->location }}</td>
-            </tr>
-            <tr>
-                <td width="5%">About</td>
-                <td width="75%">{{ $profile->about }}</td>
-            </tr>
-        @endif
-        
+                        {{ 
+                            str_replace(
+                            array("--title-start--","--title-end--","--name-start--","--name-end--"), 
+                            array('<a href="#">','</a>','<a href="#">','</a>'), 
+                            $history->message
+                            );
+                        }}
+
+                    </td>
+                </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 

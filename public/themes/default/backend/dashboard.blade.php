@@ -15,39 +15,45 @@
 								<table class="table">
 									<tr>
 										<td>Members</td>
-										<td>2</td>
+										<td>{{ $stats->count_members }}</td>
 									</tr>
+									 <tr>
+										<td>Channels </td>
+										<td>{{ $stats->count_channels }}</td>
+								    </tr>
 								    <tr>
 										<td>Conversations </td>
-										<td>2</td>
+										<td>{{ $stats->count_conversations }}</td>
+									</tr>
 								    <tr>
 										<td>Posts </td>
-										<td>2</td>
-								    <tr>
-										<td>New members in the past week </td>
-										<td>2</td>
-								    <tr>
-										<td>New conversations in the past week </td>
-										<td>2</td>
-								    <tr>
-										<td>New posts in the past week </td>
-										<td>2</td>
+										<td>{{ $stats->count_posts }}</td>
+									</tr>
 								</table>
 							</fieldset>		
                         </div>
                         <div class="span6  well well-small">
 							<fieldset> 
-								<legend>Software Versions</legend>
+								<legend>About this software</legend>
 								<table class="table">
 								    <tr>
-										<td>esoTalk version </td>
-										<td>1.0.0g3</td>
+										<td>Software version </td>
+										<td>{{ Config::get('forum::settings.version') }}</td>
+									</tr>
 								    <tr>
-										<td>PHP version </td>
-										<td>5.4.4</td>
+										<td>Developer </td>
+										<td>{{ Config::get('forum::settings.developer') }}</td>
+									</tr>
 								    <tr>
-										<td>MySQL version </td>
-										<td>5.5.25</td>
+										<td>License </td>
+										<td>{{ Config::get('forum::settings.license') }}</td>
+									</tr>
+									<tr>
+										<td>Repository </td>
+										<td><a href="{{ Config::get('forum::settings.repository') }}" target="_blank">
+											{{ Config::get('forum::settings.repository') }}</a>
+										</td>
+									</tr>
 	                        	</table>
                         	</fieldset>
                         </div>
