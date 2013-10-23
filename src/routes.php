@@ -25,6 +25,10 @@ Route::post('forum/user/join', array(
 	'as' 	=> 'post_join',
 	'uses' 	=> 'Eubby\Controllers\UserController@postJoin'
 	));
+Route::get('forum/user/activate/{id}', array(
+	'as' 	=> 'account_activation',
+	'uses' 	=> 'Eubby\Controllers\UserController@getActivate'
+	));
 
 Route::get('forum/user/login', array(
 	'as' 	=> 'login',
@@ -89,6 +93,11 @@ Route::get('forum/conversations/{channel}', array(
 Route::post('forum/subscription/addsubscriber', array(
 	'as' 	=> 'add_subscriber',
 	'uses' 	=> 'Eubby\Controllers\ConversationController@postAddSubscriber'
+	));
+
+Route::get('forum/conversation/search', array(
+	'as' 	=> 'conversation_search',
+	'uses' 	=> 'Eubby\Controllers\IndexController@getIndex'
 	));
 
 Route::get('forum/settings/profile', array(

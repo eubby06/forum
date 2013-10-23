@@ -6,6 +6,7 @@ use Eubby\Models\Channel;
 use Eubby\Models\Conversation;
 use Eubby\Models\Post;
 use Eubby\Models\Session;
+use Mail;
 
 class BaseController extends Controller {
 
@@ -18,6 +19,8 @@ class BaseController extends Controller {
 	protected $post 			= null;
 
 	protected $session 			= null;
+
+	protected $mailer			= null;
 
 	protected $layout 			= null;
 
@@ -33,6 +36,7 @@ class BaseController extends Controller {
 		$this->conversation = ($conversation) ? $conversation : new Conversation;
 		$this->post 		= ($post) ? $post : new Post;
 		$this->session 		= ($session) ? $session : new Session;
+		$this->mailer 		= Mail::getFacadeRoot();
 		$this->theme 		= Config::get('forum::theme.name');
 		$this->layout 		= "theme::{$this->theme}.layouts.single_column";
 	}

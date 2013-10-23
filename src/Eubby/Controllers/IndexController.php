@@ -6,8 +6,24 @@ class IndexController extends BaseController
 {
 	public function getIndex()
 	{
-		//get all conversations in this forum
-		$conversations 		= $this->conversation->orderby('updated_at', 'desc')->get();
+		$keywords = (Input::get('keywords')) ? strtolower(Input::get('keywords')) : null;
+		$searchError = false; //this allows us to display diff message in the view
+
+		if( is_null($keywords))
+		{
+			//get all conversations in this forum
+			$conversations 		= $this->conversation->orderby('updated_at', 'desc')->get();
+		}
+		else
+		{
+			//this tells the view that display a search error
+			$searchError 		= true;
+			
+			//get all conversations in this forum
+			$conversations 		= $this->conversation->where('title','LIKE', '%'.$keywords.'%')
+												 ->orderby('updated_at', 'desc')
+												 ->get();
+		}
 
 		//set some variables
 		$final_data 		= array();
@@ -37,8 +53,10 @@ class IndexController extends BaseController
 		}
 
 		$this->layout->content  = View::make("theme::{$this->theme}.frontend.home.index")
-									->with('conversations', $conversations);
+									->with('conversations', $conversations)
+									->with('searchError', $searchError);
 
 		return $this->layout;
 	}
+
 }

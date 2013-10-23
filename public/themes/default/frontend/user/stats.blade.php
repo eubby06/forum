@@ -26,16 +26,16 @@
     <table class="table table-striped">
         <tbody>
             <tr>
-                <td width="5%">Posts</td>
-                <td width="75%">{{ $member->stats->posts_count }}</td>
+                <td width="30%">Posts</td>
+                <td width="60%">{{ $member->stats->posts_count }}</td>
             </tr>
             <tr>
-                <td width="5%">Conversation Started</td>
-                <td width="75%">{{ $member->stats->conversations_started_count }}</td>
+                <td>Conversation Started</td>
+                <td>{{ $member->stats->conversations_started_count }}</td>
             </tr>
             <tr>
-                <td width="5%">Conversation Participated</td>
-                <td width="75%">{{ $member->stats->conversations_participated_count }}</td>
+                <td>Conversation Participated</td>
+                <td>{{ $member->stats->conversations_participated_count }}</td>
             </tr>
         </tbody>
     </table>

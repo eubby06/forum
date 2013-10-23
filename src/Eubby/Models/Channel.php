@@ -48,4 +48,10 @@ class Channel extends Base
 		return $this->belongsToMany('Eubby\Models\Group', 'channel_permissions')
 					->withPivot('can_view','can_reply','can_start','can_moderate');
 	}
+
+	public function isGuestAllowedToView()
+	{
+		$permission = $this->permissions()->where('group_id',1)->first();
+		return ($permission->pivot->can_view) ? true: false;
+	}
 }

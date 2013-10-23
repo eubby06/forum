@@ -106,19 +106,29 @@ class ConversationController extends BaseController
 			}
 		}
 
+
 		//update read/unread posts
-		if (Auth::check()) Auth::user()->logVisit($conversation);
+		if (Auth::check()) 
+		{
+			Auth::user()->logVisit($conversation);
+			
+			//check if users has permissions to this post
+			$user_group_allowed_to_comment = Auth::user()->allowedToComment($conversation->channel->id);
+			$user_group_allowed_to_view = Auth::user()->allowedToView($conversation->channel->id);
+		}
+		else
+		{
+			//assume user is guest, so check channel permission instead
+			$user_group_allowed_to_comment = false;
+			$user_group_allowed_to_view = $conversation->channel->isGuestAllowedToView();
+		}
+
+		if (!$user_group_allowed_to_view) return Redirect::route('home');
 
 		//increment views count
 		$conversation->views_count 	= $conversation->views_count + 1;
 		$conversation->timestamps 	= false;
 		$conversation->update();
-
-		//check if users permissions to this post
-		$user_group_allowed_to_comment = Auth::user()->allowedToComment($conversation->channel->id);
-		$user_group_allowed_to_view = Auth::user()->allowedToView($conversation->channel->id);
-		
-		if (!$user_group_allowed_to_view) return Redirect::route('home');
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.home.view")
 									->with('conversation', $conversation)

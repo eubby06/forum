@@ -79,10 +79,10 @@
 
                 @else
                 <div class="row-fluid">
-                    <div class="avatar span1">
-                        <div class="thumbnail"><a href="{{ route('members_profile', Auth::user()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
-                    </div>
                     @if (Auth::check() && !$user_allowed_to_comment)
+                        <div class="avatar span1">
+                            <div class="thumbnail"><a href="{{ route('members_profile', Auth::user()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
+                        </div>
                         <div class="post span11 well well-small">
                             <div class="info">
                                 <span class="muted"><i class="icon-lock"></i> Comment is only allowed to particular groups.</span>

@@ -38,6 +38,8 @@ class UserController extends BaseController
 		{
 			$user = $this->user->create($user_data);
 
+			//send activation email
+			$this->sendActivationEmail($user);
 			return Redirect::back()->with('success', 'Hi ' . $user->username . ', please activate your account by clicking on the link in the confirmation email.');
 		}
 
@@ -68,4 +70,35 @@ class UserController extends BaseController
 		return Redirect::back()->withErrors('Invalid username / password combination.');
 	}
 
+	public function getActivate($id)
+	{
+		$user = $this->user->find($id);
+
+		if ($user)
+		{
+			$user->update(array('activated' => 1));
+			return Redirect::route('login')->with('success', 'User has been activated. You may now login');
+		}
+
+		return Redirect::route('join')->withError('User could not be found. Please register again.');
+	}
+
+	protected function sendActivationEmail($user)
+	{
+		//set some variables for the mailer
+		$template = "theme::{$this->theme}.mail.activation";
+
+		$data = array(
+			'username' 		=> $user->username,
+			'userid' 		=> $user->id,
+			'email' 		=> $user->email,
+			'subject' 		=> 'Activation Email - Flash eSports Forum'
+			);
+
+		$this->mailer->send($template, $data, function($message) use ($data)
+		{
+			$message->from('yonanne@flashcomms.com', 'Flash eSports');
+			$message->to($data['email'], $data['username'])->subject($data['subject']);
+		});
+	}
 }

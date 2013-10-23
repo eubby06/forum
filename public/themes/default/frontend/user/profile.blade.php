@@ -32,12 +32,12 @@
 
         @if (!is_null($profile))
             <tr>
-                <td width="5%">Location</td>
-                <td width="75%">{{ $profile->location }}</td>
+                <td width="20%">Location</td>
+                <td width="60%">{{ $profile->location }}</td>
             </tr>
             <tr>
-                <td width="5%">About</td>
-                <td width="75%">{{ $profile->about }}</td>
+                <td width="20%">About</td>
+                <td width="60%">{{ $profile->about }}</td>
             </tr>
         @endif
         
