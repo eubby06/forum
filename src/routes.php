@@ -130,14 +130,24 @@ Route::get('members', array(
 	'uses' 	=> 'Eubby\Controllers\MembersController@getIndex'
 	));
 
-Route::get('members/edit/{id}', array(
-	'as' 	=> 'members_edit',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getEdit'
+Route::get('members/group', array(
+	'as' 	=> 'members_group',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getGroup'
+	));
+
+Route::post('members/group', array(
+	'as' 	=> 'members_group_post',
+	'uses' 	=> 'Eubby\Controllers\MembersController@postGroup'
 	));
 
 Route::get('members/delete/{id}', array(
 	'as' 	=> 'members_delete',
 	'uses' 	=> 'Eubby\Controllers\MembersController@getDelete'
+	));
+
+Route::get('members/suspend/{id}', array(
+	'as' 	=> 'members_suspend',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getSuspend'
 	));
 
 Route::get('members/profile/{username}', array(

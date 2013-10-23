@@ -66,13 +66,82 @@ class MembersController extends BaseController
 		return Redirect::back()->withErrors('Member could not be found.');
 	}
 
-	public function getEdit($id = null)
+	public function postGroup()
 	{
-		return 'edit';
+		$do = (Input::get('do')) ? Input::get('do') : null;
+		$uid = (Input::get('uid')) ? Input::get('uid') : null;
+		$group = (Input::get('group')) ? Input::get('group') : null;
+
+		//no need to proceed if two vars are null
+		if (is_null($do) || is_null($uid) || is_null($group)) return Redirect::back();
+
+		$member = $this->user->find($uid);
+
+		if ($member)
+		{
+			$member->groups()->sync(array($group));
+			return Redirect::back()->with('success', 'Group has been changed.');
+		}
+
+		return Redirect::back()->withError('User could not be found');
 	}
 
-	public function getDelete($id = null)
+	public function getGroup()
 	{
-		return 'delete';
+		$do = (Input::get('do')) ? Input::get('do') : null;
+		$uid = (Input::get('uid')) ? Input::get('uid') : null;
+
+		//no need to proceed if two vars are null
+		if (is_null($do) || is_null($uid)) return Redirect::back();
+
+		//get member
+		$member = $this->user->find($uid);
+		$groups = $this->group->groupsForHtml();
+
+		if ($do == 'change')
+		{
+			$this->layout->content = View::make("theme::{$this->theme}.frontend.members.group")
+										->with('member', $member)
+										->with('groups', $groups);
+
+			return $this->layout;		
+		}
+
+		return Redirect::back();
+	}
+
+	public function getSuspend($id = null)
+	{
+		if(is_null($id)) return Redirect::back();
+
+		$moderator = Auth::user();
+		$member = $this->user->find($id);
+
+		if (is_null($member->ban))
+		{
+			$this->ban->create(array(
+				'user_id' => $member->id,
+				'moderator_id' => $moderator->id
+				));
+
+			return Redirect::back()->with('success', 'User has been banned.');
+		}
+
+		return Redirect::back()->withErrors('User could not be banned.');
+	}
+
+	public function getRemove($id = null)
+	{
+		if(is_null($id)) return Redirect::back();
+
+		$member = $this->user->find($id);
+
+		if ($member)
+		{
+			$member->delete();
+			return Redirect::route('members')->with('success', 'User has been deleted.');
+		}
+
+		return Redirect::back()->withErrors('User could not be deleted.');
 	}
 }

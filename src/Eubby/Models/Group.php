@@ -55,4 +55,16 @@ class Group extends Base
 	{
 		return $this->hasMany('Eubby\Models\Group', 'parent_group_id');
 	}
+
+	public function groupsForHtml()
+	{
+		$data = array();
+
+		foreach($this->select('id','name','parent_group_id')->get() as $group)
+		{
+			$data[$group->id] = $group->name;
+		}
+
+		return $data;
+	}
 }

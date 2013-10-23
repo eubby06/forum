@@ -15,7 +15,7 @@ class User extends Base implements UserInterface, RemindableInterface {
 
 	protected $validation_rules = array(
 		'username' => 'required|min:4|max:16',
-		'email' 	=> 'required|email',
+		'email' 	=> 'required|email|unique:users',
 		'password' 	=> 'required|min:4|max:20|confirmed');
 
 	protected $fillable = array(
@@ -184,6 +184,16 @@ class User extends Base implements UserInterface, RemindableInterface {
 	public function histories()
 	{
 		return $this->hasMany('Eubby\Models\History', 'user_id');
+	}
+
+	public function ban()
+	{
+		return $this->hasOne('Eubby\Models\Ban', 'user_id');
+	}
+
+	public function bans()
+	{
+		return $this->hasMany('Eubby\Models\Ban', 'moderator_id');
 	}
 	 // ------------ RELATIONSHIPS ----------- END //
 	////////////////////////////////////////////////

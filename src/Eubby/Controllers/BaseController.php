@@ -6,6 +6,8 @@ use Eubby\Models\Channel;
 use Eubby\Models\Conversation;
 use Eubby\Models\Post;
 use Eubby\Models\Session;
+use Eubby\Models\Group;
+use Eubby\Models\Ban;
 use Mail;
 
 class BaseController extends Controller {
@@ -22,6 +24,10 @@ class BaseController extends Controller {
 
 	protected $mailer			= null;
 
+	protected $group 			= null;
+
+	protected $ban 				= null;
+
 	protected $layout 			= null;
 
 	public function __construct(
@@ -29,13 +35,17 @@ class BaseController extends Controller {
 		Channel $channel, 
 		Conversation $conversation, 
 		Post $post, 
-		Session $session)
+		Session $session,
+		Group $group,
+		Ban $ban)
 	{
 		$this->user 		= ($user) ? $user : new User;
 		$this->channel 		= ($channel) ? $channel : new Channel;
 		$this->conversation = ($conversation) ? $conversation : new Conversation;
 		$this->post 		= ($post) ? $post : new Post;
 		$this->session 		= ($session) ? $session : new Session;
+		$this->group 		= ($group) ? $group : new Group;
+		$this->ban 			= ($ban) ? $ban : new Ban;
 		$this->mailer 		= Mail::getFacadeRoot();
 		$this->theme 		= Config::get('forum::theme.name');
 		$this->layout 		= "theme::{$this->theme}.layouts.single_column";
