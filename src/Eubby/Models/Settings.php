@@ -11,4 +11,8 @@ class Settings extends Base
 	protected $validation_rules = array(
 		'title' => 'required');
 
+	public function getTheme()
+	{
+		return $this->theme ? $this->theme : 'default';
+	}
 }

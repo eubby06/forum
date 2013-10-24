@@ -6,6 +6,8 @@ class Ban extends Base
 {
 	protected $table 			= 'bans';
 
+	protected $primaryKey 		= 'user_id';
+
 	protected static $unguarded = true;
 
 	public $timestamps 		= false;

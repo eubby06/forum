@@ -13,9 +13,13 @@
                                 <span class="alert alert-error">{{ $conversation->unread }} new</span>
                                 @endif
                                  </td>
+                                 @if ($conversation->lastPoster())
                             <td width="20%"><a href="{{ route('members_profile', $conversation->lastPoster()->username) }}">
                                 {{ $conversation->lastPoster()->getGravatar(array('img' => true, 's' => 22)) }}
                                 {{ $conversation->lastPoster()->username }}</a> <span class="muted">posted</span>  {{ $conversation->lastPost()->created_at->diffForHumans() }}</td>
+                                @else
+                            <td width="20%">[user deleted]</td>
+                                @endif
                         </tr> 
                         @endforeach
                     @else

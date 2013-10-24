@@ -10,15 +10,15 @@
                     </div>
                     <div class="post span11 well well-small">
                         <div class="info">
-                            <a class="poster"><strong>nylad</strong></a>
-                            <span class="muted">Oct 2 Melbourne, Australia</span>
+                            <a class="poster"><strong>{{ Acl::getUser()->username }}</strong></a>
+                            <span class="muted">{{ Acl::getUser()->profile->location }}</span>
                             <input type="submit" class="btn pull-right" value="Start Conversation">
                         </div>
                         <hr />
                         <div class="post">
                          @if ($private_user)
-                            <p> {{ Auth::user()->getGravatar(array('img' => true, 's' => 22)) }} 
-                                <a href="#"><strong>{{ Auth::user()->username }}</strong></a> and 
+                            <p> {{ Acl::getUser()->getGravatar(array('img' => true, 's' => 22)) }} 
+                                <a href="#"><strong>{{ Acl::getUser()->username }}</strong></a> and 
                                 {{ $private_user->getGravatar(array('img' => true, 's' => 22)) }} 
                                 <a href="#"><strong>{{ $private_user->username }}</strong></a> will be able to view this conversation. 
                                 <a class="btn btn-small" href="#">Change</a>

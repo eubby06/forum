@@ -7,9 +7,9 @@ class SettingsController extends BaseController
 	public function getProfile()
 	{
 
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
-		$user = Auth::user();
+		$user = $this->acl->getUser();
 		$profile = ($user->profile) ? $user->profile : new \Eubby\Models\Profile;
 
 		$select_notifications = array(
@@ -33,9 +33,9 @@ class SettingsController extends BaseController
 
 	public function postProfile()
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
-		$user = Auth::user();
+		$user = $this->acl->getUser();
 		$profile = ($user->profile) ? $user->profile : new \Eubby\Models\Profile;
 
 		$profile->user_id = $user->id;
@@ -51,7 +51,7 @@ class SettingsController extends BaseController
 
 	public function getPassword()
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.password_settings");
 
@@ -60,9 +60,9 @@ class SettingsController extends BaseController
 
 	public function postPassword()
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
-		$user = Auth::user();
+		$user = $this->acl->getUser();
 		
 		//check if current password is correct
 		if (!Hash::check(Input::get('current_password'), $user->password))
@@ -111,9 +111,9 @@ class SettingsController extends BaseController
 
 	public function getNotifications()
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
-		$user = Auth::user();
+		$user = $this->acl->getUser();
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.notifications")
 									->with('user', $user);

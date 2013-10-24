@@ -8,7 +8,7 @@ class MembersController extends BaseController
 	{
 		$members = $this->user->all();
 
-		$this->layout->content = View::make("theme::{$this->theme}.frontend.members.index")
+		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.index")
 												->with('members', $members);
 		return $this->layout;
 	}
@@ -100,7 +100,7 @@ class MembersController extends BaseController
 
 		if ($do == 'change')
 		{
-			$this->layout->content = View::make("theme::{$this->theme}.frontend.members.group")
+			$this->layout->content = View::make("theme::{$this->theme}.frontend.user.group")
 										->with('member', $member)
 										->with('groups', $groups);
 
@@ -114,7 +114,7 @@ class MembersController extends BaseController
 	{
 		if(is_null($id)) return Redirect::back();
 
-		$moderator = Auth::user();
+		$moderator = $this->acl->getUser();
 		$member = $this->user->find($id);
 
 		if (is_null($member->ban))
@@ -123,14 +123,36 @@ class MembersController extends BaseController
 				'user_id' => $member->id,
 				'moderator_id' => $moderator->id
 				));
+			return Redirect::back()->with('success', 'User has been banned.');
+		}
+		else if (!$member->isSuspended())
+		{
+			$member->ban->unbanned = 0;
+			$member->ban->save();
 
 			return Redirect::back()->with('success', 'User has been banned.');
+		}
+			
+		return Redirect::back()->withErrors('User could not be banned.');
+	}
+
+	public function getUnSuspend($id = null)
+	{
+		if(is_null($id)) return Redirect::back();
+
+		$member = $this->user->find($id);
+
+		if ($member->isSuspended())
+		{
+			$member->ban->update(array('unbanned' => '1'));
+
+			return Redirect::back()->with('success', 'User has been unbanned.');
 		}
 
 		return Redirect::back()->withErrors('User could not be banned.');
 	}
 
-	public function getRemove($id = null)
+	public function getDelete($id = null)
 	{
 		if(is_null($id)) return Redirect::back();
 

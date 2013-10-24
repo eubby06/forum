@@ -6,7 +6,7 @@ class ConversationController extends BaseController
 {
 	public function getStart($username = null)
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
 		$private_user = false;
 
@@ -26,17 +26,17 @@ class ConversationController extends BaseController
 
 	public function postStart()
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
 		$conversation_data = array(
-			'user_id' 		=> Auth::user()->id,
+			'user_id' 		=> $this->acl->getUser()->id,
 			'title' 		=> Input::get('title'),
 			'post' 			=> Input::get('post'),
 			'channel_id'	=> Input::get('channel_id')
 			);
 
 		$post_data = array(
-			'user_id' 			=> Auth::user()->id,
+			'user_id' 			=> $this->acl->getUser()->id,
 			'message' 			=> Input::get('post'),
 			);
 
@@ -69,6 +69,14 @@ class ConversationController extends BaseController
 			$conversation->posts_count--;
 			$conversation->update();
 
+			//check if there's any private user, this means that this is private conversation
+			$private_user = $this->user->find(Input::get('private_user'));
+
+			if ($private_user)
+			{
+				$conversation->subscribers()->attach($private_user, array('type' => 'private'));
+			}
+
 			//redirect to home
 			return Redirect::route('home');
 		}
@@ -97,7 +105,7 @@ class ConversationController extends BaseController
 		//check if conversation is private
 		if ($conversation->isPrivate())
 		{
-			$user_id = (Auth::user()) ? Auth::user()->id : 0;
+			$user_id = ($this->acl->getUser()) ? $this->acl->getUser()->id : 0;
 
 			//check if current user has subscribed to this
 			if (!$conversation->hasPrivateSubscriberId($user_id))
@@ -108,13 +116,13 @@ class ConversationController extends BaseController
 
 
 		//update read/unread posts
-		if (Auth::check()) 
+		if ($this->acl->check()) 
 		{
-			Auth::user()->logVisit($conversation);
+			$this->acl->logVisit($conversation);
 			
 			//check if users has permissions to this post
-			$user_group_allowed_to_comment = Auth::user()->allowedToComment($conversation->channel->id);
-			$user_group_allowed_to_view = Auth::user()->allowedToView($conversation->channel->id);
+			$user_group_allowed_to_comment = $this->acl->allowedToComment($conversation->channel->id);
+			$user_group_allowed_to_view = $this->acl->allowedToView($conversation->channel->id);
 		}
 		else
 		{
@@ -139,10 +147,10 @@ class ConversationController extends BaseController
 
 	public function postReply()
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 
 		$post_data = array(
-			'user_id' 			=> Auth::user()->id,
+			'user_id' 			=> $this->acl->getUser()->id,
 			'conversation_id' 	=> Input::get('conversation_id'),
 			'message' 			=> Input::get('message')
 			);
@@ -166,7 +174,7 @@ class ConversationController extends BaseController
 	public function postAddSubscriber()
 	{
 		//get user based on posted var
-		$user = $this->user->where('username','=',Input::get('subscriber'))->firstOrFail();
+		$user = $this->user->where('username','=',Input::get('subscriber'))->first();
 
 		//redirect if user is not found
 		if (is_null($user)) return Redirect::back()->withErrors('User could not be found.');
@@ -186,10 +194,10 @@ class ConversationController extends BaseController
 
 	public function getFollow($slug = null)
 	{
-		if (!Auth::check()) return Redirect::route('login');
+		if (!$this->acl->check()) return Redirect::route('login');
 		
 		//get logged in user
-		$user = Auth::user(); 
+		$user = $this->acl->getUser(); 
 
 		//get conversation based on slug
 		$conversation = $this->conversation->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
@@ -210,7 +218,7 @@ class ConversationController extends BaseController
 	public function getUnfollow($slug = null)
 	{
 		//get logged in user
-		$user = Auth::user();
+		$user = $this->acl->getUser();
 
 		//get conversation based on slug
 		$conversation = $this->conversation->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();

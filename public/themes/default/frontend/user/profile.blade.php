@@ -6,7 +6,7 @@
             </div>
             <div class="span8">
                 <ul class="unstyled">
-                    <li><strong>{{ $member->username }}</strong></li>
+                    <li><strong>{{ $member->username }}</strong> <i class="muted">{{ $member->isSuspended() ? '(suspended)' : '' }}</i></li>
                     <li><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></li>
                     <li>@foreach ($member->listGroups() as $group)
                         {{ $group }}
@@ -14,23 +14,7 @@
                     <li>Last active {{ $member->lastActive() }}</li>
                 </ul>
             </div>
-            @if (Auth::user()->isAdmin() && Auth::user()->id != $member->id)
-            <div class="span2">
-                    <div class="btn-group btn-block">
-                        <button class="btn"><i class="icon-asterisk"></i> Controls</button>
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ route('members_suspend', $member->id) }}"><i class="icon-ban-circle"></i> Suspend member</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{ route('members_group', array('uid' => $member->id,'do' => 'change')) }}"><i class="icon-edit"></i> Change group</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{ route('members_delete', $member->id) }}"><i class="icon-remove"></i> Delete member</a></li>
-                        </ul>
-                    </div>
-            </div>
-            @endif
+             @include('theme::'.Settings::getTheme().'.frontend.user.control')
         </div>
         <hr />
     <ul class="nav nav-tabs">
@@ -41,7 +25,7 @@
 
     <table class="table table-striped">
         <tbody>
-        @if (Auth::check() && Auth::user()->username == $member->username)
+        @if (Acl::check() && Acl::getUser()->username == $member->username)
             <tr>
                 <td colspan="2"><a href="{{ route('settings') }}" class="btn btn-primary">Edit Profile</a></td>
             </tr>

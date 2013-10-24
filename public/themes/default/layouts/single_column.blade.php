@@ -16,11 +16,11 @@
 
   <body>
 
-      @include('theme::default.__partials.top_navigation')
+      @include('theme::'.Settings::getTheme().'.__partials.top_navigation')
 
     <div class="container-fluid">
-      @include('theme::default.__partials.channels_menu')
-      @include('theme::default.__partials.errors')
+      @include('theme::'.Settings::getTheme().'.__partials.channels_menu')
+      @include('theme::'.Settings::getTheme().'.__partials.errors')
       @yield('content')
       <hr />
       @yield('statistics')

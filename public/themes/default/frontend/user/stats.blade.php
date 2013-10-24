@@ -4,7 +4,7 @@
             <div class="span2">
                <div class="thumbnail"> {{ $member->getGravatar(array('img' => true, 's' => 128)) }}</div>
             </div>
-            <div class="span10">
+            <div class="span8">
                 <ul class="unstyled">
                     <li><strong>{{ $member->username }}</strong></li>
                     <li><a href="mailto:{{ $member->email }}">{{ $member->email }}</a></li>
@@ -14,6 +14,7 @@
                     <li>Last active {{ $member->lastActive() }}</li>
                 </ul>
             </div>
+            @include('theme::'.Settings::getTheme().'.frontend.user.control')
         </div>
         <hr />
         

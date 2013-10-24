@@ -23,9 +23,12 @@ class ForumServiceProvider extends ServiceProvider {
 		$this->package('eubby/forum');
 
 		include __DIR__.'/../../start.php';
+		include __DIR__.'/../../filters.php';
 		include __DIR__.'/../../routes.php';
 
 		$this->commands('forum.command');
+
+		$this->loadAliases();
 	}
 
 	/**
@@ -45,13 +48,43 @@ class ForumServiceProvider extends ServiceProvider {
 		{
 			return $this->guessPackagePath() . '/config/';
 		});
+
+		//set acl
+		$this->app->singleton('Acl', function()
+		{
+			return new \Eubby\Libs\Acl\Acl();
+		});
+
+		$this->app->singleton('Settings', function()
+		{
+			return \Eubby\Models\Settings::find(1);
+		});
 	}
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
+	public function getAppConfig($file = 'app')
+	{
+		if(!isset($this->PkgAppConfig[$file]))
+		{
+			$path = $this->guessPackagePath();
+			$ConfigFile = $path . '/config/'.$file.'.php';
+			$this->PkgAppConfig[$file] = $this->app['files']->getRequire($ConfigFile);
+		}
+		
+		return $this->PkgAppConfig[$file];
+	}
+
+	public function loadAliases()
+	{
+		$appConfig = $this->getAppConfig();
+		
+		$aliases = $appConfig['aliases'];
+
+		foreach($aliases as $alias => $class)
+		{
+			class_alias($class, $alias);
+		}
+	}
+
 	public function provides()
 	{
 		return array();

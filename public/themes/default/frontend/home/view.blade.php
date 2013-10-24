@@ -1,7 +1,7 @@
 @section('content')
 <div class="conversation">
 
-    @if (Auth::check() && (Auth::user()->id == $conversation->user_id))
+    @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
     <div class="row-fluid">
         <div class="well">
             <fieldset> 
@@ -33,15 +33,23 @@
 
                 <div class="row-fluid">
                     <div class="avatar span1">
+                        @if ($post->user)
                         <div class="thumbnail"><a href="{{ route('members_profile', $post->user->username) }}">
                             {{ $post->user->getGravatar(array('img' => true, 's' => 64)) }}
                         </a></div>
+                        @else
+                        <div class="thumbnail">[user deleted]</div>
+                        @endif
                     </div>
                     <div class="post span11 well well-small">
                         <div class="info">
+                            @if ($post->user)
                             <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ $post->user->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
                             <a class="poster pull-right">quote | edit | delete</a> 
+                            @else
+                            <span class="muted">[use deleted]</span>
+                            @endif
                         </div>
                         <hr />
                         <div class="post">
@@ -53,19 +61,19 @@
                 </div>
                 @endforeach
 
-               @if (Auth::check() && $user_allowed_to_comment)
+               @if (Acl::check() && $user_allowed_to_comment)
 
                 {{ Form::open(array('route' => array('post_reply', $conversation->slug))) }}
                 <div class="row-fluid">
                     <div class="avatar span1">
-                        <div class="thumbnail"><a href="{{ route('members_profile', Auth::user()->username) }}">
-                            {{ Auth::user()->getGravatar(array('img' => true, 's' => 64)) }}
+                        <div class="thumbnail"><a href="{{ route('members_profile', Acl::getUser()->username) }}">
+                            {{ Acl::getUser()->getGravatar(array('img' => true, 's' => 64)) }}
                         </a></div>
                     </div>
                     <div class="post span11 well well-small">
                         <div class="info">
-                            <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ Auth::user()->username }}</strong></a>
-                            <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
+                                 <a href="{{ route('members_profile', Acl::getUser()->username) }}" class="poster"><strong>{{ Acl::getUser()->username }}</strong></a>
+                            <span class="muted">{{ $post->created_at->diffForHumans() }} {{ (Acl::getUser()->profile) ? Acl::getUser()->profile->location : 'unavailable location' }}</span>
                             <input type="submit" class="btn pull-right" value="Post a Reply">
                         </div>
                         <hr />
@@ -79,9 +87,9 @@
 
                 @else
                 <div class="row-fluid">
-                    @if (Auth::check() && !$user_allowed_to_comment)
+                    @if (Acl::check() && !$user_allowed_to_comment)
                         <div class="avatar span1">
-                            <div class="thumbnail"><a href="{{ route('members_profile', Auth::user()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
+                            <div class="thumbnail"><a href="{{ route('members_profile', Acl::getUser()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
                         </div>
                         <div class="post span11 well well-small">
                             <div class="info">
@@ -118,7 +126,7 @@
                         </ul>
                     </div>
 
-                    @if (Auth::check() && Auth::user()->hasSubscription($conversation->id))
+                    @if (Acl::check() && Acl::getUser()->hasSubscription($conversation->id))
                         <a class="btn btn-block" href="{{ route('unfollow_conversation', $conversation->slug, 'unfollow') }}"><i class="icon-star"></i> Unfollow</a>
                     @else
                         <a class="btn btn-block" href="{{ route('follow_conversation', $conversation->slug, 'follow') }}"><i class="icon-star"></i> Follow</a>

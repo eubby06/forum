@@ -150,6 +150,11 @@ Route::get('members/suspend/{id}', array(
 	'uses' 	=> 'Eubby\Controllers\MembersController@getSuspend'
 	));
 
+Route::get('members/unsuspend/{id}', array(
+	'as' 	=> 'members_unsuspend',
+	'uses' 	=> 'Eubby\Controllers\MembersController@getUnSuspend'
+	));
+
 Route::get('members/profile/{username}', array(
 	'as' 	=> 'members_profile',
 	'uses' 	=> 'Eubby\Controllers\MembersController@getProfile'
@@ -165,7 +170,7 @@ Route::get('members/activity/{username}', array(
 	'uses' 	=> 'Eubby\Controllers\MembersController@getActivity'
 	));
 
-Route::group(array('prefix' => 'admin', 'before' => 'auth'), function()
+Route::group(array('prefix' => 'admin', 'before' => 'admin_auth'), function()
 {
 		Route::get('/', array(
 			'as' 	=> 'admin_dashboard',

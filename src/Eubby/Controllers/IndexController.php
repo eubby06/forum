@@ -1,6 +1,6 @@
 <?php namespace Eubby\Controllers;
 
-use View, Input, Redirect, Auth;
+use View, Input, Redirect;
 
 class IndexController extends BaseController 
 {
@@ -30,7 +30,7 @@ class IndexController extends BaseController
 		$unread_count 		= 0;
 
 		//update read/unread posts
-		if (Auth::check()) 
+		if ($this->acl->check()) 
 		{
 			//loop through all conversations
 			for ($i=0; $i<$conversations->count(); $i++)
@@ -41,7 +41,7 @@ class IndexController extends BaseController
 					if ($channel->deleted_at == null)
 					{
 						//get user last visit date to get unread posts in this conversation
-						$last_visit = Auth::user()->lastVisit($conversations[$i]);
+						$last_visit = $this->acl->lastVisit($conversations[$i]);
 						$conversations[$i]->unread = $conversations[$i]->unreadPostsCount($last_visit);				
 					}
 					else

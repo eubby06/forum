@@ -11,89 +11,24 @@ use DB;
 class User extends Base implements UserInterface, RemindableInterface {
 
 
-	protected $table = 'users';
+	protected $table 			= 'users';
 
 	protected $validation_rules = array(
-		'username' => 'required|min:4|max:16',
-		'email' 	=> 'required|email|unique:users',
-		'password' 	=> 'required|min:4|max:20|confirmed');
+										'username' 	=> 'required|min:4|max:16',
+										'email' 	=> 'required|email|unique:users',
+										'password' 	=> 'required|min:4|max:20|confirmed');
 
-	protected $fillable = array(
+	protected $fillable 		= array(
 		'username',
 		'password',
 		'email',
 		'ip_address',
 	);
 
-	protected $hidden = array('password');
+	protected $softDelete 		= true;
 
-	 /////////////////////////////////////////////////////
-	// ------------ USER PERMISSIONS ----------- START //
-	public function allowedToComment($channel_id)
-	{
-		$allowed = false;
+	protected $hidden 			= array('password');
 
-		foreach ($this->listGroups() as $id => $name)
-		{
-			$permissions = DB::table('channel_permissions')
-								->where('group_id', $id)
-								->where('channel_id', $channel_id)
-								->get();
-
-			foreach ($permissions as $permission)
-			{
-				$allowed = ($permission->can_reply == 1) ? true : false;
-			}
-
-			if ($allowed == true) break;
-		}
-
-		return $allowed;
-	}
-
-	public function allowedToView($channel_id)
-	{
-		$allowed = false;
-
-		foreach ($this->listGroups() as $id => $name)
-		{
-			$permissions = DB::table('channel_permissions')
-								->where('group_id', $id)
-								->where('channel_id', $channel_id)
-								->get();
-
-			foreach ($permissions as $permission)
-			{
-				$allowed = ($permission->can_view == 1) ? true : false;
-			}
-
-			if ($allowed == true) break;
-		}
-
-		return $allowed;
-	}
-
-		 
-	// ------------ USER PERMISSIONS ----------- START //
-	/////////////////////////////////////////////////////
-
-
-	 ////////////////////////////////////////////////
-	// ------------ USER GROUPS ----------- START //
-	public function isAdmin()
-	{
-		return (in_array('Administrator', $this->listGroups()));
-	}
-
-	public function isMember()
-	{
-		return (in_array('Member', $this->listGroups()));
-	}
-
-	public function isModerator()
-	{
-		return (in_array('Moderator', $this->listGroups()));
-	}
 
 	public function listGroups()
 	{
@@ -106,31 +41,15 @@ class User extends Base implements UserInterface, RemindableInterface {
 
 		return $groups;
 	}
-	 
-	// ------------ USER GROUPS ----------- END //
-   //////////////////////////////////////////////
 
-	public function lastVisit(Conversation $conversation)
+	public function isSuspended()
 	{
-
-		$log = DB::table('read_posts')->where('post_id','=',$conversation->first_post_id)
-										->where('user_id','=',$this->id)
-										->first();
-
-		return (is_null($log)) ? null : $log->updated_at;
+		return ($this->ban && !$this->ban->unbanned) ? true : false;
 	}
 
-	public function logVisit(Conversation $conversation)
+	public function isDeleted()
 	{
-		$log = $this->readposts()->where('post_id','=',$conversation->first_post_id)->first();
-
-		if (is_null($log))
-		{
-			$this->readposts()->attach($conversation->first_post_id, array('created_at' => date('Y-m-d H:i:s')));
-			return false;
-		}
-
-		$log->pivot->update(array('updated_at' => date('Y-m-d H:i:s')));
+		return (is_null($this->deleted_at)) ? false : true;
 	}
 
 	public function isOnline()

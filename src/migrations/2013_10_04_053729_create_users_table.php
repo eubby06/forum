@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration {
 			$table->string('ip_address');
 			$table->enum('active', array('0','1'))->default(0);
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

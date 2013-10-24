@@ -10,7 +10,7 @@ class UserController extends BaseController
 		$this->session->deactivate(Auth::user()->id);
 
 		//logout from session
-		Auth::logout();
+		$this->acl->logout();
 
 		return Redirect::route('home')->with('success', 'You have logged out successfully.');		
 	}
@@ -59,10 +59,10 @@ class UserController extends BaseController
 			'username' => Input::get('username'),
 			'password' => Input::get('password'));
 
-		if (Auth::attempt($login_data, Input::has('remember_me')))
+		if ($this->acl->attempt($login_data, Input::has('remember_me')))
 		{
 			//add user to session
-			$this->session->add(array('user_id' => Auth::user()->id, 'active' => 1, 'ip_address' => Request::getClientIp()));
+			$this->session->add(array('user_id' => $this->acl->getUser()->id, 'active' => 1, 'ip_address' => Request::getClientIp()));
 
 			return Redirect::route('home')->with('success', 'Hi ' . $login_data['username'] . ', welcome to the forum.');
 		}
