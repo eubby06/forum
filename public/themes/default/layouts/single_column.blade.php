@@ -31,6 +31,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ theme_asset('vendor/js/jquery.min.js') }}"></script>
     <script src="{{ theme_asset('vendor/js/bootstrap.min.js') }}"></script>
-
+    <script src="{{ theme_asset('js/post.js') }}"></script>
   </body>
 </html>

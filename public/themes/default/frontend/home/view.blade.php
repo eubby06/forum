@@ -1,5 +1,5 @@
 @section('content')
-<div class="conversation">
+<div class="conversation" id="comment-wrapper">
 
     @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
     <div class="row-fluid">
@@ -41,20 +41,22 @@
                         <div class="thumbnail">[user deleted]</div>
                         @endif
                     </div>
-                    <div class="post span11 well well-small">
+                    <div class="span11 well well-small">
                         <div class="info">
                             @if ($post->user)
                             <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ $post->user->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
-                            <a class="poster pull-right">quote | edit | delete</a> 
+                            <span class="pull-right">
+                                <a href="#" class="-quote" id="{{ $post->id }}">quote</a> | 
+                                <a href="#" class="-edit" id="{{ $post->id }}">edit</a> | 
+                                <a href="#" class="-delete" id="{{ $post->id }}">delete</a> 
+                            </span>
                             @else
                             <span class="muted">[use deleted]</span>
                             @endif
                         </div>
                         <hr />
-                        <div class="post">
-                        {{ $post->message }}
-                        </div>
+                        <div class="post" id="message-{{ $post->id }}">{{ $post->getProcessedMessage() }}</div>
                         <hr />
                         <span class="muted">One thing is for sure, there's always darkness after daylight.</span>
                     </div>
@@ -64,22 +66,22 @@
                @if (Acl::check() && $user_allowed_to_comment)
 
                 {{ Form::open(array('route' => array('post_reply', $conversation->slug))) }}
-                <div class="row-fluid">
+                <div class="row-fluid" id="reply">
                     <div class="avatar span1">
                         <div class="thumbnail"><a href="{{ route('members_profile', Acl::getUser()->username) }}">
                             {{ Acl::getUser()->getGravatar(array('img' => true, 's' => 64)) }}
                         </a></div>
                     </div>
-                    <div class="post span11 well well-small">
+                    <div class="span11 well well-small">
                         <div class="info">
                                  <a href="{{ route('members_profile', Acl::getUser()->username) }}" class="poster"><strong>{{ Acl::getUser()->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ (Acl::getUser()->profile) ? Acl::getUser()->profile->location : 'unavailable location' }}</span>
                             <input type="submit" class="btn pull-right" value="Post a Reply">
                         </div>
                         <hr />
-                        <div class="post">
+                        <div class="form">
                         {{ Form::hidden('conversation_id', $post->conversation_id) }}
-                        {{ Form::textarea('message', '', array('class' => 'span12')) }}
+                        {{ Form::textarea('message', '', array('class' => 'span12', 'id' => 'message')) }}
                         </div>
                     </div>
                 </div>

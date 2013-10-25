@@ -81,4 +81,33 @@ class Post extends Base
 	{
 		return $this->belongsTo('Eubby\Models\User', 'user_id');
 	}
+
+	public function getProcessedMessage()
+	{
+		$message = $this->message;
+
+		if (!empty($message));
+		{
+			//get quote post id
+			preg_match("/\[quote=\d{2}\]/", $message, $quote);
+			
+			if (!empty($quote))
+			{
+				//get id and find the post by id
+				$id = str_replace(array('[quote=',']'),'',$quote[0]);
+				$post = \Eubby\Models\Post::find($id);
+
+				$message = str_replace(
+								array($quote[0],'[/quote]'), 
+								array('[blockquote][user]' . $post->user->username . '[/user] ','[/blockquote]'), 
+								$message);
+				
+				return $message;
+			}
+
+			return $message;
+		}
+
+		return false;
+	}
 }
