@@ -1,6 +1,17 @@
 "use strict";
 (function($, application, window)
 {
+	var offset = 100;
+    var duration = 500;
+
+    $(window).scroll(function() {
+          if ($(this).scrollTop() > offset) {
+              $('.back-to-top').fadeIn(duration);
+          } else {
+              $('.back-to-top').fadeOut(duration);
+          }
+    });
+
 	application.CommunicationLayer = function (spec) {
 		var self = this;
 
@@ -57,6 +68,16 @@
 					$('#reply #message').removeClass('active').addClass('active');
 
 					var $c_reply = $('#reply #message').html('[quote=' + $c_id + ']' + $c_post + '[/quote]');
+					
+					//scroll window
+					$('html, body').animate({
+			            scrollTop: $("#reply").offset().top
+			        }, 500);
+				})
+				.on('click', '.back-to-top', function() {
+			        $('html, body').animate({scrollTop: 0}, duration);
+			        
+			        return false;
 				})
 	};
 
@@ -66,28 +87,4 @@ $(function() {
 
 	MyApp.performBinding(new MyApp.CommunicationLayer(), "#comment-wrapper");
 
-    $('a.-quote').click(function(){
-
-        $('html, body').animate({
-            scrollTop: $("#reply").offset().top
-        }, 500);
-    });
-
-    var offset = 100;
-    var duration = 500;
-
-    $(window).scroll(function() {
-          if ($(this).scrollTop() > offset) {
-              $('.back-to-top').fadeIn(duration);
-          } else {
-              $('.back-to-top').fadeOut(duration);
-          }
-    });
-      
-    $('.back-to-top').click(function(event) {
-          event.preventDefault();
-
-          $('html, body').animate({scrollTop: 0}, duration);
-          return false;
-    });
 });
