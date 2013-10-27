@@ -1,6 +1,8 @@
 @section('content')
 <div class="conversation" id="comment-wrapper">
 
+    <a href="#" class="back-to-top">Back to Top</a>
+
     @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
     <div class="row-fluid">
         <div class="well">
@@ -138,4 +140,5 @@
             </div>
         </div>
 </div>
+
 @stop

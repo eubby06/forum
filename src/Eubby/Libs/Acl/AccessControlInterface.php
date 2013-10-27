@@ -29,5 +29,7 @@ interface AccessControlInterface
 	public function lastVisit(Conversation $conversation);
 
 	public function logVisit(Conversation $conversation);
+
+	public function getGravatar($passed_settings = array());
 	
 }

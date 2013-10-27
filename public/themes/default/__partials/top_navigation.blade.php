@@ -9,13 +9,14 @@
           <a class="brand" href="{{ route('home') }}">{{ Eubby\Models\Settings::find(1)->title }}</a>
           <div class="nav-collapse collapse">
             <ul class="nav pull-right">
+
               @if (Acl::isGuest())
                   <li><a href="{{ route('join') }}"><i class="icon-cog icon-white"></i>  Sign Up</a></li>
                   <li><a href="{{ route('login') }}"><i class="icon-off icon-white"></i> Log In</a></li>
                   <li><a href="{{ route('start_conversation') }}"><i class="icon-fire icon-white"></i> Start New Conversation</a></li>
               @else
                   <li><a href="{{ route('members_profile', Acl::getUser()->username) }}">
-                    {{ Acl::getUser()->getGravatar(array('img' => true, 's' => 20)) }}
+                    {{ Acl::getGravatar(array('img' => true, 's' => 20)) }}
                     <strong>{{ Acl::getUser()->username }}</strong></a></li>
                   <li><a href="{{ route('settings') }}"><i class="icon-cog icon-white"></i>  Settings</a></li>
                   @if (Acl::isAdmin())

@@ -88,8 +88,9 @@ class Post extends Base
 
 		if (!empty($message));
 		{
+
 			//get quote post id
-			preg_match("/\[quote=\d{2}\]/", $message, $quote);
+			preg_match("/\[quote=\d{1,2}\]/", $message, $quote);
 			
 			if (!empty($quote))
 			{

@@ -19,3 +19,19 @@ input[type="text"], textarea, label{font-size:12px;}
 
 textarea.active{border:1px dashed;}
 blockquote{border:1px solid #333; color:#999; padding:5px 20px; font-style:italic; border-radius: 4px 4px 4px 4px;}
+
+.back-to-top {
+    position: fixed;
+    bottom: 2em;
+    right: 0px;
+    text-decoration: none;
+    color: #000000;
+    background-color: rgba(235, 235, 235, 0.80);
+    font-size: 12px;
+    padding: 1em;
+    display: none;
+}
+
+.back-to-top:hover {    
+    background-color: rgba(135, 135, 135, 0.50);
+}

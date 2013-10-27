@@ -9,7 +9,7 @@ use Eubby\Models\Session;
 use Eubby\Models\Group;
 use Eubby\Models\Ban;
 use Eubby\Models\Settings;
-use Eubby\Libs\Acl\Acl;
+use Acl;
 use Mail;
 
 class BaseController extends Controller {
@@ -37,7 +37,6 @@ class BaseController extends Controller {
 	protected $layout 			= null;
 
 	public function __construct(
-		Acl $acl,
 		User $user, 
 		Channel $channel, 
 		Conversation $conversation, 
@@ -47,7 +46,7 @@ class BaseController extends Controller {
 		Ban $ban,
 		Settings $settings)
 	{
-		$this->acl 			= ($acl) ? $acl : new Acl;
+		$this->acl 			= Acl::getFacadeRoot();
 		$this->user 		= ($user) ? $user : new User;
 		$this->channel 		= ($channel) ? $channel : new Channel;
 		$this->conversation = ($conversation) ? $conversation : new Conversation;

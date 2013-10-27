@@ -145,4 +145,9 @@ class Acl implements AccessControlInterface
 
 		$log->pivot->update(array('updated_at' => date('Y-m-d H:i:s')));
 	}
+
+	public function getGravatar($passed_settings = array())
+	{
+		return $this->getUser()->getGravatar($passed_settings);
+	}
 }
