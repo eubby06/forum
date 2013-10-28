@@ -4,25 +4,35 @@
     <a href="#" class="back-to-top">Back to Top</a>
 
     @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
+
     <div class="row-fluid">
+        <div class="span10 offset1">
+            <span class="muted">Conversation Privacy.</span>
+            <a href="#-add-member-form" role="button" data-toggle="modal">Change.</a>
+        </div>
+    </div>
+
+    <div id="-add-member-form" class="modal hide fade">
         <div class="well">
             <fieldset> 
                 <legend>Members Allowed to View this Conversation</legend>
                 <form method="post" name="subscription" class="form-inline" role="form" action="{{ route('add_subscriber') }}">
-                    {{ Form::text('subscriber') }}
-                    {{ Form::hidden('conversation_id', $conversation->id) }}
-                    {{ Form::submit('Add', array('class' => 'btn')) }}
+                    {{ Form::text('subscriber', '', array('id' => '-subscriber-username')) }}
+                    {{ Form::hidden('conversation_id', $conversation->id, array('id' => '-conversation-id')) }}
+                    {{ Form::submit('Add', array('class' => 'btn -add-member')) }}
                 </form>
+                <span class="-added-members-result alert"></span>
                 <hr />
-                <span class="muted">
-                    @if ($conversation->getPrivateSubscribers()->isEmpty())
-                        Everyone can view this conversation.
-                    @else
-                    Users in this conversation:
+                <span class="muted -added-members">
+
                         @foreach ($conversation->getPrivateSubscribers() as $subscriber)
-                           <a href="{{ route('members_profile', $subscriber->username) }}">{{ $subscriber->username }}</a> <i class="icon-remove"></i>
+                        <span class="{{ $subscriber->username }}">
+                            <a href="{{ route('members_profile', $subscriber->username) }}">{{ $subscriber->username }}</a> 
+                            <a id="{{ $subscriber->username }}:{{ $conversation->id }}" class="-remove-member" href="#">
+                                <i class="icon-remove"></i></a>
+                        </span>
                         @endforeach
-                    @endif
+
                 </span>
             </fieldset>
         </div>

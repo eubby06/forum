@@ -1,6 +1,6 @@
 <?php namespace Eubby\Controllers;
 
-use View, Input, Redirect, Auth;
+use View, Input, Redirect, Auth, Response;
 
 class ConversationController extends BaseController
 {
@@ -187,6 +187,69 @@ class ConversationController extends BaseController
 
 		//subscribe user to the conversation
 		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
+
+		//redirect with success
+		return Redirect::back()->with('success', 'User has been added and subscribed.');
+	}
+
+	public function postAjaxAddSubscriber()
+	{
+		//get user based on posted var
+		$user = $this->user->where('username','=',Input::get('subscriber'))->first();
+
+		//redirect if user is not found
+		if (is_null($user)) return Response::json(array('result' => 'fail', 'message' => 'User not found.'));
+
+		//check if use has already subscribed
+		$subscription = $user->subscriptions()->where('conversation_id','=',Input::get('conversation_id'))->first();
+
+		//redirect back if already subscribed
+		if (!is_null($subscription)) return Response::json(array('result' => 'fail', 'message' => 'User is already in the list.'));
+
+		//subscribe user to the conversation
+		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
+
+		//redirect with success
+		return Response::json(array('result' => 'success', 'message' => 'User has been added and subscribed.'));
+	}
+
+	public function postAjaxRemoveSubscriber()
+	{
+		//get user based on posted var
+		$user = $this->user->where('username','=',Input::get('subscriber'))->first();
+
+		//redirect if user is not found
+		if (is_null($user)) return Response::json(array('result' => 'fail', 'message' => 'User not found.'));
+
+		//check if use has already subscribed
+		$subscription = $user->subscriptions()->where('conversation_id','=',Input::get('conversation_id'))->first();
+
+		//redirect back if already subscribed
+		if (is_null($subscription)) return Response::json(array('result' => 'fail', 'message' => 'User is not in the list.'));
+
+		//subscribe user to the conversation
+		$user->subscriptions()->detach($subscription->conversation_id);
+
+		//redirect with success
+		return Response::json(array('result' => 'success', 'message' => 'User has been removed.'));	
+	}
+
+	public function getRemoveSubscriber()
+	{
+		//get user based on posted var
+		$user = $this->user->where('username','=',Input::get('username'))->first();
+
+		//redirect if user is not found
+		if (is_null($user)) return Redirect::back()->withErrors('User could not be found.');
+
+		//check if use has already subscribed
+		$subscription = $user->subscriptions()->where('conversation_id','=',Input::get('cid'))->first();
+
+		//redirect back if already subscribed
+		if (is_null($subscription)) return Redirect::back()->withErrors('User is not already in the list.');
+
+		//subscribe user to the conversation
+		$user->subscriptions()->detach($subscription->conversation_id);
 
 		//redirect with success
 		return Redirect::back()->with('success', 'User has been added and subscribed.');

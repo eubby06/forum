@@ -35,3 +35,5 @@ blockquote{border:1px solid #333; color:#999; padding:5px 20px; font-style:itali
 .back-to-top:hover {    
     background-color: rgba(135, 135, 135, 0.50);
 }
+
+.-added-members-result{display:none;}

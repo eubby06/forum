@@ -95,6 +95,21 @@ Route::post('forum/subscription/addsubscriber', array(
 	'uses' 	=> 'Eubby\Controllers\ConversationController@postAddSubscriber'
 	));
 
+Route::post('forum/subscription/ajaxaddsubscriber', array(
+	'as' 	=> 'ajax_add_subscriber',
+	'uses' 	=> 'Eubby\Controllers\ConversationController@postAjaxAddSubscriber'
+	));
+
+Route::post('forum/subscription/ajaxremovesubscriber', array(
+	'as' 	=> 'ajax_remove_subscriber',
+	'uses' 	=> 'Eubby\Controllers\ConversationController@postAjaxRemoveSubscriber'
+	));
+
+Route::get('forum/subscription/removesubscriber', array(
+	'as' 	=> 'remove_subscriber',
+	'uses' 	=> 'Eubby\Controllers\ConversationController@getRemoveSubscriber'
+	));
+
 Route::get('forum/conversation/search', array(
 	'as' 	=> 'conversation_search',
 	'uses' 	=> 'Eubby\Controllers\IndexController@getIndex'
