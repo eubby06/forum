@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link href="{{ theme_asset('css/frontend.css') }}" rel="stylesheet">
     <style>
       body {
@@ -29,7 +30,8 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ theme_asset('vendor/js/jquery.min.js') }}"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="{{ theme_asset('vendor/js/bootstrap.min.js') }}"></script>
     <script src="{{ theme_asset('js/post.js') }}"></script>
   </body>

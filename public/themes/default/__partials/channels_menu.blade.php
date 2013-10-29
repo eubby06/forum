@@ -8,7 +8,7 @@
 
     </ul>
     <form class="navbar-search pull-right span5" action="{{ route('conversation_search') }}" method="get">
-        <input name="keywords" type="text" class="search-query" placeholder="Search for conversation...">
+        <input id="search" name="keywords" type="text" class="search-query" placeholder="Search for conversation...">
         <button type="submit" class="btn">Search</button>
     </form>
 </div>

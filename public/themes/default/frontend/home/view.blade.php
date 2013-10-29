@@ -1,6 +1,21 @@
 @section('content')
 <div class="conversation" id="comment-wrapper">
 
+    <div id="-confirm-delete-modal" class="modal hide fade">
+        <div class="modal-header">
+            <a href="#" data-dismiss="modal" aria-hidden="true" class="close">×</a>
+             <h3>Delete</h3>
+        </div>
+        <div class="modal-body">
+            <p>You are about to delete a post.</p>
+            <p>Do you want to proceed?</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" id="-confirm-delete-btn" class="btn danger">Yes</a>
+          <a href="#" data-dismiss="modal" aria-hidden="true" class="btn secondary">No</a>
+        </div>
+    </div>
+
     <a href="#" class="back-to-top">Back to Top</a>
 
     @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
@@ -39,11 +54,11 @@
     </div>
     @endif
 
-        <div class="row-fluid">
+        <div class="row-fluid -all-post">
             <div class="span10">
                 @foreach ($conversation->posts as $post)
 
-                <div class="row-fluid">
+                <div class="row-fluid -single-post">
                     <div class="avatar span1">
                         @if ($post->user)
                         <div class="thumbnail"><a href="{{ route('members_profile', $post->user->username) }}">
@@ -111,7 +126,8 @@
                             </div>
                         </div>
                     @else
-                        <div class="post span11 well well-small">
+                        <div class="span1"></div>
+                        <div class="span11 well well-small">
                             <div class="info">
                                 <a class="poster" href="{{ route('login') }}"><strong>Login</strong></a>
                                 <span class="muted">or</span>

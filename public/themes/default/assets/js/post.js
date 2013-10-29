@@ -3,6 +3,8 @@
 {
 	var offset = 100;
     var duration = 500;
+    var addMemberUrl = '/forum/subscription/ajaxaddsubscriber';
+    var removeMemberUrl = '/forum/subscription/ajaxremovesubscriber';
 
     $(window).scroll(function() {
           if ($(this).scrollTop() > offset) {
@@ -12,7 +14,7 @@
           }
     });
 
-	application.CommunicationLayer = function (spec) {
+	application.Model= function (spec) {
 		var self = this;
 
 		self.delete = function(id) {
@@ -27,7 +29,7 @@
 
 			$.ajax({
 				type: 'POST',
-				url: '/forum/subscription/ajaxaddsubscriber',
+				url: addMemberUrl,
 				data: {subscriber: username, conversation_id: cid}
 			}).done(function(msg) {
 
@@ -35,6 +37,7 @@
 				{
 					$('.-added-members').append('<span class="'+username+'"><a id="'+ username +'" href="members/profile/'+ username +'">' 
 						+ username + '</a><a id="' + username + ':' + cid + '" class="-remove-member" href="#"><i class="icon-remove"></i></a></span>').fadeIn('slow');
+					$('#-subscriber-username').val('');
 				}
 				else
 				{
@@ -47,7 +50,7 @@
 
 			$.ajax({
 				type: 'POST',
-				url: '/forum/subscription/ajaxremovesubscriber',
+				url: removeMemberUrl,
 				data: {subscriber: username, conversation_id: cid}
 			}).done(function(msg) {
 
@@ -65,7 +68,7 @@
 		return self;
 	};
 
-	application.performBinding = function(app, selector) {
+	application.Controller = function(app, selector) {
 		var $wrapper = $(selector || window.document);
 
 		$(".post").each(function() {
@@ -82,13 +85,19 @@
 		});
 
 		$wrapper
+				.on('click', '#-confirm-delete-btn', function() {
+					var id = $('#-confirm-delete-modal').data('pid');
+
+					console.log('deleting' + id);
+
+					$('#-confirm-delete-modal').modal('hide');
+				})
 				.on('click', '.-delete', function(e) {
 					e.preventDefault();
 
 					var $comment_id = $(this).attr("id");
-					var proceed = confirm("Are you sure you would like to delete this comment?");
-            		
-            		if (!proceed) { return; }
+					
+					$('#-confirm-delete-modal').data('pid', $comment_id).modal('show')
 
             		app.delete($comment_id);
 				})
@@ -124,6 +133,8 @@
 					var username = $('#-subscriber-username').val();
 					var cid = $('#-conversation-id').val();
 
+					if (username.length == 0) return false;
+
 					app.addMember(username, cid);
 				})
 				.on('click', '.-remove-member', function(e) {
@@ -138,10 +149,12 @@
 				})
 	};
 
-})(jQuery, window.MyApp || (window.MyApp = {}), window);
+})(jQuery, window.PostApp || (window.PostApp= {}), window);
 
 $(function() {
+	
+	$('#search').autocomplete({ source: [ "c++", "java", "php", "coldfusion", "javascript", "asp", "ruby" ] });
 
-	MyApp.performBinding(new MyApp.CommunicationLayer(), "#comment-wrapper");
+	PostApp.Controller(new PostApp.Model(), "#comment-wrapper");
 
 });
