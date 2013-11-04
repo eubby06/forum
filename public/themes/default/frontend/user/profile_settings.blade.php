@@ -37,7 +37,7 @@
             </tr>
                         <tr>
                 <td>Privacy</td>
-                <td>Don't allow other users to see when I am online</td>
+                <td><label class="checkbox">{{ Form::checkbox('privacy', $profile->privacy, $profile->privacy ? true : false) }} Don't allow other users to see when I am online</label></td>
             </tr>
                         <tr>
                 <td>Location</td>

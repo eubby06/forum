@@ -17,7 +17,9 @@ class CreateNotificationsTable extends Migration {
 			$table->increments('id');
 			$table->integer('user_id')->default(0);
 			$table->text('message')->nullable();
-			$table->string('sender_id')->default(0);
+			$table->integer('notifiable_id');
+			$table->string('notifiable_type');
+			$table->integer('sender_id')->default(0);
 			$table->timestamp('created_at');
 		});
 	}

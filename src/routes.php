@@ -185,6 +185,11 @@ Route::get('members/activity/{username}', array(
 	'uses' 	=> 'Eubby\Controllers\MembersController@getActivity'
 	));
 
+Route::post('posts/ajaxdelete', array(
+	'as' 	=> 'ajax_posts_delete',
+	'uses' 	=> 'Eubby\Controllers\PostsController@postAjaxDelete'
+	));
+
 Route::group(array('prefix' => 'admin', 'before' => 'admin_auth'), function()
 {
 		Route::get('/', array(

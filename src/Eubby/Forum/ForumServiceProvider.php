@@ -59,6 +59,13 @@ class ForumServiceProvider extends ServiceProvider {
 		{
 			return \Eubby\Models\Settings::find(1);
 		});
+
+		$this->app->singleton('Notifier', function()
+		{
+			$notificationModel = new \Eubby\Models\Notification();
+
+			return new \Eubby\Libs\Notification\Notifier($notificationModel);
+		});
 	}
 
 	public function getAppConfig($file = 'app')

@@ -47,6 +47,11 @@ class Conversation extends Base
 		return $this->morphMany('Eubby\Models\History', 'historable');
 	}
 
+	public function notifications()
+	{
+		return $this->morphMany('Eubby\Models\Notification', 'notifiable');
+	}
+
 	protected function setSlugAttribute($slug)
 	{
 		//Lower case everything
@@ -83,7 +88,7 @@ class Conversation extends Base
 			return User::find($this->user_id);
 		}
 		
-		$post = Post::find($this->last_post_id);
+		$post = Post::withTrashed()->find($this->last_post_id);
 		$user = User::find($post->user_id);
 
 		return $user;
@@ -93,10 +98,10 @@ class Conversation extends Base
 	{
 		if($this->last_post_id < 1)
 		{
-			return Post::find($this->first_post_id);
+			return Post::withTrashed()->find($this->first_post_id);
 		}
 		
-		return Post::find($this->last_post_id);
+		return Post::withTrashed()->find($this->last_post_id);
 	}
 
 	public function isPrivate()

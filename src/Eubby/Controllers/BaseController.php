@@ -10,6 +10,7 @@ use Eubby\Models\Group;
 use Eubby\Models\Ban;
 use Eubby\Models\Settings;
 use Acl;
+use Notifier;
 use Mail;
 
 class BaseController extends Controller {
@@ -36,6 +37,9 @@ class BaseController extends Controller {
 
 	protected $layout 			= null;
 
+	protected $notifier 		= null;
+
+
 	public function __construct(
 		User $user, 
 		Channel $channel, 
@@ -44,7 +48,8 @@ class BaseController extends Controller {
 		Session $session,
 		Group $group,
 		Ban $ban,
-		Settings $settings)
+		Settings $settings,
+		Notifier $notifier)
 	{
 		$this->acl 			= Acl::getFacadeRoot();
 		$this->user 		= ($user) ? $user : new User;
@@ -55,6 +60,7 @@ class BaseController extends Controller {
 		$this->group 		= ($group) ? $group : new Group;
 		$this->ban 			= ($ban) ? $ban : new Ban;
 		$this->settings 	= ($settings) ? $settings : new Settings;
+		$this->notifier 	= ($notifier) ? $notifier : new Notifier;
 		$this->mailer 		= Mail::getFacadeRoot();
 		$this->theme 		= $this->settings->find(1)->theme;
 		$this->layout 		= "theme::{$this->theme}.layouts.single_column";

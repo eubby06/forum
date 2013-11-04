@@ -58,7 +58,7 @@
             <div class="span10">
                 @foreach ($conversation->posts as $post)
 
-                <div class="row-fluid -single-post">
+                <div class="row-fluid -single-post-{{ $post->id}}">
                     <div class="avatar span1">
                         @if ($post->user)
                         <div class="thumbnail"><a href="{{ route('members_profile', $post->user->username) }}">
@@ -73,11 +73,13 @@
                             @if ($post->user)
                             <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ $post->user->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
-                            <span class="pull-right">
-                                <a href="#" class="-quote" id="{{ $post->id }}">quote</a> | 
-                                <a href="#" class="-edit" id="{{ $post->id }}">edit</a> | 
-                                <a href="#" class="-delete" id="{{ $post->id }}">delete</a> 
-                            </span>
+                                @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
+                                <span class="pull-right">
+                                    <a href="#" class="-quote" id="{{ $post->id }}" data-user="{{ $post->user->username }}">quote</a> | 
+                                    <a href="#" class="-edit" id="{{ $post->id }}" >edit</a> | 
+                                    <a href="#" class="-delete" id="{{ $post->id }}" >delete</a> 
+                                </span>
+                                @endif
                             @else
                             <span class="muted">[use deleted]</span>
                             @endif

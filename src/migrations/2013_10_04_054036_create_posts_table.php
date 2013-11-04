@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration {
 			$table->text('message');
 			$table->timestamps();
 			$table->enum('answer', array('0', '1'))->default(0);
+			$table->softDeletes();
 		});
 	}
 

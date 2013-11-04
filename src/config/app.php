@@ -8,7 +8,8 @@ return array(
 	'aliases' 			=> array(
 
 							'Acl'			=> 'Eubby\Libs\Facades\Acl',
-							'Settings'  	=> 'Eubby\Libs\Facades\Settings'
+							'Settings'  	=> 'Eubby\Libs\Facades\Settings',
+							'Notifier'		=> 'Eubby\Libs\Notification\Notifier'
 						),    
 
 );

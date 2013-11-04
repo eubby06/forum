@@ -6,6 +6,9 @@ class IndexController extends BaseController
 {
 	public function getIndex()
 	{
+
+		$this->notifier->setUser($this->acl->getUser());
+
 		$keywords = (Input::get('keywords')) ? strtolower(Input::get('keywords')) : null;
 		$searchError = false; //this allows us to display diff message in the view
 

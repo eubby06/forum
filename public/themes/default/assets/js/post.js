@@ -5,6 +5,7 @@
     var duration = 500;
     var addMemberUrl = '/forum/subscription/ajaxaddsubscriber';
     var removeMemberUrl = '/forum/subscription/ajaxremovesubscriber';
+    var removePostUrl = '/posts/ajaxdelete';
 
     $(window).scroll(function() {
           if ($(this).scrollTop() > offset) {
@@ -17,8 +18,19 @@
 	application.Model= function (spec) {
 		var self = this;
 
-		self.delete = function(id) {
-			alert(id);
+		self.removePost = function(id) {
+			$.ajax({
+				type: 'POST',
+				url: removePostUrl,
+				data: {pid: id}
+			}).done(function(msg) {
+
+				if (msg.result == 'success')
+				{
+					$('.-single-post-'+id).detach();
+				}
+
+			});
 		};
 
 		self.quote = function() {
@@ -88,7 +100,7 @@
 				.on('click', '#-confirm-delete-btn', function() {
 					var id = $('#-confirm-delete-modal').data('pid');
 
-					console.log('deleting' + id);
+					app.removePost(id);
 
 					$('#-confirm-delete-modal').modal('hide');
 				})
@@ -105,6 +117,7 @@
 					e.preventDefault();
 
 					var $c_id = $(this).attr("id");
+					var $c_user = $(this).attr("data-user");
 					var $c_post = $('#message-' + $c_id).html();
 
 		    		$c_post  = $c_post.replace(/\<blockquote\>/g, '[blockquote]')
@@ -115,7 +128,7 @@
 
 					$('#reply #message').removeClass('active').addClass('active');
 
-					var $c_reply = $('#reply #message').html('[quote=' + $c_id + ']' + $c_post + '[/quote]');
+					var $c_reply = $('#reply #message').html('[quote=' + $c_user + ']' + $c_post + '[/quote]');
 					
 					//scroll window
 					$('html, body').animate({

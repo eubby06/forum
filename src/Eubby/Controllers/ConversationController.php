@@ -159,12 +159,6 @@ class ConversationController extends BaseController
 		{
 			$post = $this->post->create($post_data);
 
-			//this function has been moved to the model in boot method
-			//$conversation 				= $this->conversation->find($post->conversation_id);
-			//$conversation->posts_count 	= $conversation->posts_count + 1;
-			//$conversation->last_post_id = $post->id;
-			//$conversation->update();
-
 			return Redirect::back()->with('success', 'Reply has been posted.');
 		}
 
@@ -188,6 +182,13 @@ class ConversationController extends BaseController
 		//subscribe user to the conversation
 		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
 
+		//notifier user
+		$this->notifier->setMessage('You are added to conversation');
+		$this->notifier->setUser($user);
+		$this->notifier->setSender($this->acl->getUser());
+		$this->notifier->setNotifiableObj($this->conversation->find(Input::get('conversation_id')));
+		$this->notifier->attemptNotify();
+
 		//redirect with success
 		return Redirect::back()->with('success', 'User has been added and subscribed.');
 	}
@@ -209,8 +210,16 @@ class ConversationController extends BaseController
 		//subscribe user to the conversation
 		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
 
+		//notifier user
+		$this->notifier->setMessage('You are added to conversation');
+		$this->notifier->setUser($user);
+		$this->notifier->setSender($this->acl->getUser());
+		$this->notifier->setNotifiableObj($this->conversation->find(Input::get('conversation_id')));
+		$this->notifier->attemptNotify();
+
 		//redirect with success
 		return Response::json(array('result' => 'success', 'message' => 'User has been added and subscribed.'));
+		
 	}
 
 	public function postAjaxRemoveSubscriber()
