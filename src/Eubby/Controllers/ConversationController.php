@@ -34,7 +34,7 @@ class ConversationController extends BaseController
 			'post' 			=> Input::get('post'),
 			'channel_id'	=> Input::get('channel_id')
 			);
-
+		
 		$post_data = array(
 			'user_id' 			=> $this->acl->getUser()->id,
 			'message' 			=> Input::get('post'),
@@ -211,7 +211,8 @@ class ConversationController extends BaseController
 		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
 
 		//notifier user
-		$this->notifier->setMessage('You are added to conversation');
+		$this->notifier->setMessage('has added you to a private conversation.');
+		$this->notifier->setType('1'); // EMAIL_WHEN_ADDED_TO_CONVERSATION
 		$this->notifier->setUser($user);
 		$this->notifier->setSender($this->acl->getUser());
 		$this->notifier->setNotifiableObj($this->conversation->find(Input::get('conversation_id')));

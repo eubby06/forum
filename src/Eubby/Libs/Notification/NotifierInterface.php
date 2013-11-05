@@ -19,4 +19,10 @@ interface NotifierInterface
 
 	public function setUser($user);
 
+	public function getErrors();
+
+	public function hideNotification($id);
+
+	public function removeNotification($id);
+	
 }

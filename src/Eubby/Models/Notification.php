@@ -14,4 +14,9 @@ class Notification extends Base
 	{
 		return $this->morphTo();
 	}
+
+	public function user()
+	{
+		return $this->belongsTo('Eubby\Models\User', 'user_id');
+	}
 }

@@ -114,9 +114,11 @@ class SettingsController extends BaseController
 		if (!$this->acl->check()) return Redirect::route('login');
 
 		$user = $this->acl->getUser();
+		$notifications = $user->notifications()->where('hidden','=',0)->get();
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.notifications")
-									->with('user', $user);
+									->with('user', $user)
+									->with('notifications', $notifications);
 
 		return $this->layout;	
 	}

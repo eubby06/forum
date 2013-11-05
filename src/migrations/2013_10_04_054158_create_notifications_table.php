@@ -21,6 +21,7 @@ class CreateNotificationsTable extends Migration {
 			$table->string('notifiable_type');
 			$table->integer('sender_id')->default(0);
 			$table->timestamp('created_at');
+			$table->enum('hidden', array('0','1'))->default(0);
 		});
 	}
 

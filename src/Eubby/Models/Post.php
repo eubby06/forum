@@ -5,6 +5,7 @@ use Eubby\Models\ForumStats;
 use Eubby\Models\UserStats;
 use Eubby\Models\Post;
 use Eubby\Models\History;
+use App, Acl;
 
 class Post extends Base
 {
@@ -25,6 +26,16 @@ class Post extends Base
 
 		static::created(function($post)
 		{
+			//send notification
+			$post->conversation->notify();
+
+			//notify user that are mentioned in this post
+			//this also notify users who opted to receive notification automatically
+			$post->notify();
+
+			//follow conversation if user has opted in
+			$post->conversation->autoFollow();
+
 			//create history only for the second post or first post id is not zero or has been set
 			if ($post->conversation->first_post_id != 0)
 			{
@@ -67,6 +78,46 @@ class Post extends Base
 				$ustat->increment('conversations_participated_count');
 			}
 		});
+	}
+
+	public function notify()
+	{
+		//get notifier obj
+		$this->notifier = App::make('Notifier');
+
+		//look up for users mentioned in this post
+		preg_match_all('/@[a-zA-Z0-9_.-]+/', $this->message, $users);
+
+		$users = array_shift($users);
+
+		//make sure there are users at least one
+		if (count($users) > 0)
+		{
+
+			//loop through each user
+			foreach ($users as $user)
+			{
+				//remove the @ sign
+				$user = str_replace('@','',$user);
+
+				//check if user exists
+				$user = $this->user->where('username','=',$user)->first();
+
+				//if yes then try to notify
+				if ($user)
+				{
+					$this->notifier->setMessage('has mentioned you in the her/his latest post.');
+					$this->notifier->setType('3'); // notify when mentioned in the post
+					$this->notifier->setUser($user);
+					$this->notifier->setSender(Acl::getUser());
+					$this->notifier->setNotifiableObj($this->conversation);
+					$this->notifier->attemptNotify();
+				}
+				
+			}
+		}
+
+		return true;
 	}
 
 	public function histories()

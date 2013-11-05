@@ -4,12 +4,16 @@ use Eubby\Models\Base;
 use Eubby\Models\User;
 use Eubby\Models\ForumStats;
 use Eubby\Models\UserStats;
+use Eubby\Models\NotifierInterface;
+use App, Acl;
 
-class Conversation extends Base
+class Conversation extends Base implements NotifierInterface
 {
 	protected $table 			= 'conversations';
 
 	protected $guarded 			= array('id');
+
+	protected $notifier 		= null;
 
 	protected $validation_rules = array(
 		'user_id' 		=> 'required|numeric', 
@@ -40,6 +44,34 @@ class Conversation extends Base
 			$ustat->increment('posts_count');
 			$ustat->increment('conversations_started_count');
 		});
+	}
+
+	public function notify()
+	{
+		//get notifier obj
+		$this->notifier = App::make('Notifier');
+
+		//get users subscribed to this conversation
+		$users = $this->subscribers;
+
+		//make sure there are users at least one
+		if ($users->count() > 0)
+		{
+			//loop through each user
+			foreach ($users as $user)
+			{
+
+				//notifier user
+				$this->notifier->setMessage('has posted in a conversation you are tagged in.');
+				$this->notifier->setType('2'); // EMAIL_WHEN_ADDED_TO_CONVERSATION
+				$this->notifier->setUser($user);
+				$this->notifier->setSender(Acl::getUser());
+				$this->notifier->setNotifiableObj($this);
+				$this->notifier->attemptNotify();				
+			}
+		}
+
+		return true;
 	}
 
 	public function histories()
@@ -169,5 +201,25 @@ class Conversation extends Base
 
 		$dateTime = date('Y-m-d H:i:s', strtotime($date));
 		return $this->posts()->where('updated_at','>',$dateTime)->get()->count();
+	}
+
+	public function autoFollow()
+	{
+		$settings = unserialize(Acl::getUser()->profile->notifications);
+		$type = 4; //follow conversation that user has replied to
+
+		if (in_array($type, $settings))
+		{
+			if (!$this->hasFollowerId(Acl::getUser()->id))
+			{
+				$this->subscribers()->attach(Acl::getUser()->id, array(
+								'type' => 'follow'
+								));	
+
+				return true;	
+			}
+		}
+
+		return false;
 	}
 }

@@ -107,7 +107,7 @@ class User extends Base implements UserInterface, RemindableInterface {
 
 	public function notifications()
 	{
-		return $this->morphMany('Eubby\Models\Notification', 'notifiable');
+		return $this->hasMany('Eubby\Models\Notification', 'user_id');
 	}
 
 	public function ban()

@@ -185,6 +185,16 @@ Route::get('members/activity/{username}', array(
 	'uses' 	=> 'Eubby\Controllers\MembersController@getActivity'
 	));
 
+Route::get('notifications/hide/{id}', array(
+	'as' 	=> 'hide_notification',
+	'uses' 	=> 'Eubby\Controllers\NotificationsController@getHide'
+	));
+
+Route::get('notifications/remove/{id}', array(
+	'as' 	=> 'remove_notification',
+	'uses' 	=> 'Eubby\Controllers\NotificationsController@getRemove'
+	));
+
 Route::post('posts/ajaxdelete', array(
 	'as' 	=> 'ajax_posts_delete',
 	'uses' 	=> 'Eubby\Controllers\PostsController@postAjaxDelete'

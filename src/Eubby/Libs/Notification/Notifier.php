@@ -58,9 +58,10 @@ class Notifier implements NotifierInterface
 
 	public function setType($type = null)
 	{
-		if (is_null($type)) return false;
-
-		$this->type = $type;
+		if (is_null($type)) 
+			$this->type = '0';
+		else
+			$this->type = $type;
 	}
 
 	public function hasOptIn()
@@ -130,11 +131,12 @@ class Notifier implements NotifierInterface
 			'user' 			=> $this->user,
 			'sender' 		=> $this->sender,
 			'notifiableObj' => $this->notifiableObj,
-			'subject' 		=> 'Notification - Flash eSports Forum'
+			'subject' 		=> 'Notification - Flash eSports Forum',
+			'statement' 	=> $this->message
 			);
 
 		//notify user by email
-		$this->mailer->send($this->template, $data, function($message) use ($data)
+		Mail::send($this->template, $data, function($message) use ($data)
 		{
 			$message->from('yonanne@flashcomms.com', 'Flash eSports');
 			$message->to($data['user']->email, $data['user']->username)->subject($data['subject']);
@@ -150,7 +152,8 @@ class Notifier implements NotifierInterface
 			'user_id' => $this->user->id,
 			'message' => $this->message,
 			'sender_id' => $this->sender->id,
-			'created_at' => date('Y-m-d H:i:s')
+			'created_at' => date('Y-m-d H:i:s'),
+			'hidden' => 0
 			));
 
 		return true;
@@ -159,5 +162,34 @@ class Notifier implements NotifierInterface
 	public function getErrors()
 	{
 		return $this->errors[0];
+	}
+
+	public function hideNotification($id)
+	{
+		$notification = $this->model->find($id);
+
+		if (!is_null($notification))
+		{
+			$notification->hidden = true;
+			$notification->save();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public function removeNotification($id)
+	{
+		$notification = $this->model->find($id);
+
+		if (!is_null($notification))
+		{
+			$notification->delete();
+
+			return true;
+		}
+
+		return false;
 	}
 }

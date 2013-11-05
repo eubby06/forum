@@ -39,9 +39,9 @@ class IndexController extends BaseController
 			for ($i=0; $i<$conversations->count(); $i++)
 				{
 					$channel = $this->channel->withTrashed()->where('id','=',$conversations[0]->channel_id)->first();
-					
+
 					//check if this conversation belongs to active channel, exclude if it belongs to deleted channel
-					if ($channel->deleted_at == null)
+					if (is_null($channel->deleted_at))
 					{
 						//get user last visit date to get unread posts in this conversation
 						$last_visit = $this->acl->lastVisit($conversations[$i]);
