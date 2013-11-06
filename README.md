@@ -1,15 +1,15 @@
 # Forum Package for Laravel 4
+- This forum package is inspired by esotalk developed by @tobscure.
 
-#### STATUS: UNDER DEVELOPMENT
+#### Status: Under Development
 
 ### How to Install
 
-- Install L4 App from Github ( Watch this if you need to know how : http://net.tutsplus.com/tutorials/php/how-to-setup-laravel-4/)
 - In your app composer.json file, add:
 
 ```php
 	"require": {
-		"eubby06/forum": "*"
+		"eubby/forum": "dev-Core"
 	}
 ```
 
