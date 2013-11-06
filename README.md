@@ -26,7 +26,16 @@
 )
 
 ```
-- And run the following command in the terminal to start installing the CMS package
+
+- Please change the default user model to:
+
+```php
+
+'model' => 'Eubby\Models\User',
+
+```
+
+- And run the following command in the terminal to start installing the Forum package
 
 ```
  php artisan forum:install
@@ -35,9 +44,9 @@
 - The above command will ask you to create and admin user account
 
 ### Frontend
-- By default the Forum frontend is available on http://www.domain.com/forum
+- By default it is available on http://www.domain.com/forum
 
 ### Admin Panel
-- By default the Forum admin panel is available on http://www.domain.com/admin
+- By default it is available on http://www.domain.com/admin
 
 Documentation will be updated soon
