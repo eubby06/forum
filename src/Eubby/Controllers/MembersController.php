@@ -6,7 +6,7 @@ class MembersController extends BaseController
 {
 	public function getIndex()
 	{
-		$members = $this->user->all();
+		$members = $this->user->paginate(10);
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.index")
 												->with('members', $members);

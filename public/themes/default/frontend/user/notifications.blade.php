@@ -14,12 +14,13 @@
 
             @foreach ($notifications as $notification)
             <tr>
-                <td width="70%"><strong>{{ $notification->user->username }}</strong> {{ $notification->message }}</td>
+                <td width="70%"><strong>{{ Eubby\Models\User::find($notification->sender_id)->username }}</strong> {{ $notification->message }}</td>
                 <td width="10%"><i class="icon-search"></i> <a href="{{ route('view_conversation', $notification->notifiable->slug) }}">view</a></td>
                 <td width="10%"><i class="icon-remove"></i> <a href="{{ route('remove_notification', $notification->id) }}">remove</a></td>
                 <td width="10%"><i class="icon-eye-close"></i> <a href="{{ route('hide_notification', $notification->id) }}">hide</a></td>
             </tr>
             @endforeach
+            <tr><td colspan="4">{{ $notifications->links() }}</td> </tr>
         </tbody>
     </table>
 

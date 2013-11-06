@@ -38,6 +38,8 @@ class Notifier implements NotifierInterface
 	{
 		if (is_null($this->user)) return false;
 
+		if (empty($this->user->profile->notifications)) return array();
+		
 		return unserialize($this->user->profile->notifications);
 	}
 

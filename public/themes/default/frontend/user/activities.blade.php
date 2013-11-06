@@ -26,7 +26,7 @@
     <table class="table table-striped">
         <tbody>
             @if ($member->histories)
-                @foreach ($member->histories as $history)
+                @foreach ($member->histories()->take(10)->get() as $history)
                 <tr>
                     <td width="5%" colspan="2">
 

@@ -11,194 +11,198 @@
 |
 */
 
-Route::get('forum/user/logout', array(
-	'as' 	=> 'logout',
-	'uses' 	=> 'Eubby\Controllers\UserController@getLogout'
+Route::group(array('prefix' => 'forum'), function()
+{
+	Route::get('/', array(
+		'as' 	=> 'home',
+		'uses' 	=> 'Eubby\Controllers\IndexController@getIndex'
+		));
+
+	Route::get('user/login', array(
+		'as' 	=> 'login',
+		'uses' 	=> 'Eubby\Controllers\UserController@getLogin'
+		));
+
+	Route::post('user/login', array(
+		'as' 	=> 'post_login',
+		'uses' 	=> 'Eubby\Controllers\UserController@postLogin'
+		));
+
+	Route::get('user/logout', array(
+		'as' 	=> 'logout',
+		'uses' 	=> 'Eubby\Controllers\UserController@getLogout'
+		));
+
+	Route::get('user/join', array(
+		'as' 	=> 'join',
+		'uses' 	=> 'Eubby\Controllers\UserController@getJoin'
+		));
+
+	Route::post('user/join', array(
+		'as' 	=> 'post_join',
+		'uses' 	=> 'Eubby\Controllers\UserController@postJoin'
+		));
+	Route::get('user/activate/{id}', array(
+		'as' 	=> 'account_activation',
+		'uses' 	=> 'Eubby\Controllers\UserController@getActivate'
+		));
+
+	Route::get('profile/{username}', array(
+		'as' 	=> 'profile',
+		'uses' 	=> 'Eubby\Controllers\ProfileController@getIndex'
 	));
 
-Route::get('forum/user/join', array(
-	'as' 	=> 'join',
-	'uses' 	=> 'Eubby\Controllers\UserController@getJoin'
+	Route::get('settings', array(
+		'as' 	=> 'settings',
+		'uses' 	=> 'Eubby\Controllers\SettingsController@getIndex'
+		));
+
+	Route::get('conversation/follow/{slug}', array(
+		'as' 	=> 'follow_conversation',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@getFollow'
+		));
+
+	Route::get('conversation/unfollow/{slug}', array(
+		'as' 	=> 'unfollow_conversation',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@getUnfollow'
+		));
+
+	Route::get('conversation/view/{slug}', array(
+		'as' 	=> 'view_conversation',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@getView'
+		));
+
+	Route::get('conversation/start/{username?}', array(
+		'as' 	=> 'start_conversation',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@getStart'
+		));
+
+	Route::post('conversation/start', array(
+		'as' 	=> 'post_conversation',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@postStart'
+		));
+
+	Route::post('conversation/reply/{slug}', array(
+		'as' 	=> 'post_reply',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@postReply'
+		));
+
+	Route::get('conversations/list/{channel}', array(
+		'as' 	=> 'list_conversations',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@getList'
+		));
+
+	Route::post('subscription/addsubscriber', array(
+		'as' 	=> 'add_subscriber',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@postAddSubscriber'
+		));
+
+	Route::post('subscription/ajaxaddsubscriber', array(
+		'as' 	=> 'ajax_add_subscriber',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@postAjaxAddSubscriber'
+		));
+
+	Route::post('subscription/ajaxremovesubscriber', array(
+		'as' 	=> 'ajax_remove_subscriber',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@postAjaxRemoveSubscriber'
+		));
+
+	Route::get('subscription/removesubscriber', array(
+		'as' 	=> 'remove_subscriber',
+		'uses' 	=> 'Eubby\Controllers\ConversationController@getRemoveSubscriber'
+		));
+
+	Route::get('conversation/index/search', array(
+		'as' 	=> 'conversation_search',
+		'uses' 	=> 'Eubby\Controllers\IndexController@getIndex'
+		));
+
+	Route::get('settings/profile', array(
+		'as' 	=> 'settings',
+		'uses' 	=> 'Eubby\Controllers\SettingsController@getProfile'
+		));
+
+	Route::post('settings/profile', array(
+		'as' 	=> 'post_settings',
+		'uses' 	=> 'Eubby\Controllers\SettingsController@postProfile'
+		));
+
+	Route::get('settings/password', array(
+		'as' 	=> 'password_settings',
+		'uses' 	=> 'Eubby\Controllers\SettingsController@getPassword'
+		));
+
+	Route::post('settings/password', array(
+		'as' 	=> 'post_password_settings',
+		'uses' 	=> 'Eubby\Controllers\SettingsController@postPassword'
+		));
+
+	Route::get('settings/notifications', array(
+		'as' 	=> 'notifications',
+		'uses' 	=> 'Eubby\Controllers\SettingsController@getNotifications'
+		));
+
+	Route::get('members', array(
+		'as' 	=> 'members',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getIndex'
 	));
 
-Route::post('forum/user/join', array(
-	'as' 	=> 'post_join',
-	'uses' 	=> 'Eubby\Controllers\UserController@postJoin'
-	));
-Route::get('forum/user/activate/{id}', array(
-	'as' 	=> 'account_activation',
-	'uses' 	=> 'Eubby\Controllers\UserController@getActivate'
+	Route::get('members/group', array(
+		'as' 	=> 'members_group',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getGroup'
+		));
+
+	Route::post('members/group', array(
+		'as' 	=> 'members_group_post',
+		'uses' 	=> 'Eubby\Controllers\MembersController@postGroup'
+		));
+
+	Route::get('members/delete/{id}', array(
+		'as' 	=> 'members_delete',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getDelete'
+		));
+
+	Route::get('members/suspend/{id}', array(
+		'as' 	=> 'members_suspend',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getSuspend'
+		));
+
+	Route::get('members/unsuspend/{id}', array(
+		'as' 	=> 'members_unsuspend',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getUnSuspend'
+		));
+
+	Route::get('members/profile/{username}', array(
+		'as' 	=> 'members_profile',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getProfile'
+		));
+
+	Route::get('members/stats/{username}', array(
+		'as' 	=> 'members_stats',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getStats'
+		));
+
+	Route::get('members/activity/{username}', array(
+		'as' 	=> 'members_activity',
+		'uses' 	=> 'Eubby\Controllers\MembersController@getActivity'
+		));
+
+	Route::get('notifications/hide/{id}', array(
+		'as' 	=> 'hide_notification',
+		'uses' 	=> 'Eubby\Controllers\NotificationsController@getHide'
 	));
 
-Route::get('forum/user/login', array(
-	'as' 	=> 'login',
-	'uses' 	=> 'Eubby\Controllers\UserController@getLogin'
-	));
+	Route::get('notifications/remove/{id}', array(
+		'as' 	=> 'remove_notification',
+		'uses' 	=> 'Eubby\Controllers\NotificationsController@getRemove'
+		));
 
-Route::post('forum/user/login', array(
-	'as' 	=> 'post_login',
-	'uses' 	=> 'Eubby\Controllers\UserController@postLogin'
-	));
+	Route::post('posts/ajaxdelete', array(
+		'as' 	=> 'ajax_posts_delete',
+		'uses' 	=> 'Eubby\Controllers\PostsController@postAjaxDelete'
+		));
+});
 
-Route::get('forum/profile/{username}', array(
-	'as' 	=> 'profile',
-	'uses' 	=> 'Eubby\Controllers\ProfileController@getIndex'
-	));
-
-Route::get('forum/settings', array(
-	'as' 	=> 'settings',
-	'uses' 	=> 'Eubby\Controllers\SettingsController@getIndex'
-	));
-
-Route::get('forum', array(
-	'as' 	=> 'home',
-	'uses' 	=> 'Eubby\Controllers\IndexController@getIndex'
-	));
-
-Route::get('forum/{slug}/follow', array(
-	'as' 	=> 'follow_conversation',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@getFollow'
-	));
-
-Route::get('forum/{slug}/unfollow', array(
-	'as' 	=> 'unfollow_conversation',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@getUnfollow'
-	));
-
-Route::get('forum/{slug}', array(
-	'as' 	=> 'view_conversation',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@getView'
-	));
-
-Route::get('forum/conversation/start/{username?}', array(
-	'as' 	=> 'start_conversation',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@getStart'
-	));
-
-Route::post('forum/conversation/start', array(
-	'as' 	=> 'post_conversation',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@postStart'
-	));
-
-Route::post('forum/{slug}', array(
-	'as' 	=> 'post_reply',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@postReply'
-	));
-
-Route::get('forum/conversations/{channel}', array(
-	'as' 	=> 'list_conversations',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@getList'
-	));
-
-Route::post('forum/subscription/addsubscriber', array(
-	'as' 	=> 'add_subscriber',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@postAddSubscriber'
-	));
-
-Route::post('forum/subscription/ajaxaddsubscriber', array(
-	'as' 	=> 'ajax_add_subscriber',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@postAjaxAddSubscriber'
-	));
-
-Route::post('forum/subscription/ajaxremovesubscriber', array(
-	'as' 	=> 'ajax_remove_subscriber',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@postAjaxRemoveSubscriber'
-	));
-
-Route::get('forum/subscription/removesubscriber', array(
-	'as' 	=> 'remove_subscriber',
-	'uses' 	=> 'Eubby\Controllers\ConversationController@getRemoveSubscriber'
-	));
-
-Route::get('forum/conversation/search', array(
-	'as' 	=> 'conversation_search',
-	'uses' 	=> 'Eubby\Controllers\IndexController@getIndex'
-	));
-
-Route::get('forum/settings/profile', array(
-	'as' 	=> 'settings',
-	'uses' 	=> 'Eubby\Controllers\SettingsController@getProfile'
-	));
-
-Route::post('forum/settings/profile', array(
-	'as' 	=> 'post_settings',
-	'uses' 	=> 'Eubby\Controllers\SettingsController@postProfile'
-	));
-
-Route::get('forum/settings/password', array(
-	'as' 	=> 'password_settings',
-	'uses' 	=> 'Eubby\Controllers\SettingsController@getPassword'
-	));
-
-Route::post('forum/settings/password', array(
-	'as' 	=> 'post_password_settings',
-	'uses' 	=> 'Eubby\Controllers\SettingsController@postPassword'
-	));
-
-Route::get('forum/settings/notifications', array(
-	'as' 	=> 'notifications',
-	'uses' 	=> 'Eubby\Controllers\SettingsController@getNotifications'
-	));
-
-Route::get('members', array(
-	'as' 	=> 'members',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getIndex'
-	));
-
-Route::get('members/group', array(
-	'as' 	=> 'members_group',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getGroup'
-	));
-
-Route::post('members/group', array(
-	'as' 	=> 'members_group_post',
-	'uses' 	=> 'Eubby\Controllers\MembersController@postGroup'
-	));
-
-Route::get('members/delete/{id}', array(
-	'as' 	=> 'members_delete',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getDelete'
-	));
-
-Route::get('members/suspend/{id}', array(
-	'as' 	=> 'members_suspend',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getSuspend'
-	));
-
-Route::get('members/unsuspend/{id}', array(
-	'as' 	=> 'members_unsuspend',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getUnSuspend'
-	));
-
-Route::get('members/profile/{username}', array(
-	'as' 	=> 'members_profile',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getProfile'
-	));
-
-Route::get('members/stats/{username}', array(
-	'as' 	=> 'members_stats',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getStats'
-	));
-
-Route::get('members/activity/{username}', array(
-	'as' 	=> 'members_activity',
-	'uses' 	=> 'Eubby\Controllers\MembersController@getActivity'
-	));
-
-Route::get('notifications/hide/{id}', array(
-	'as' 	=> 'hide_notification',
-	'uses' 	=> 'Eubby\Controllers\NotificationsController@getHide'
-	));
-
-Route::get('notifications/remove/{id}', array(
-	'as' 	=> 'remove_notification',
-	'uses' 	=> 'Eubby\Controllers\NotificationsController@getRemove'
-	));
-
-Route::post('posts/ajaxdelete', array(
-	'as' 	=> 'ajax_posts_delete',
-	'uses' 	=> 'Eubby\Controllers\PostsController@postAjaxDelete'
-	));
 
 Route::group(array('prefix' => 'admin', 'before' => 'admin_auth'), function()
 {

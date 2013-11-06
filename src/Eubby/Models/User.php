@@ -30,6 +30,33 @@ class User extends Base implements UserInterface, RemindableInterface {
 	protected $hidden 			= array('password');
 
 
+	public static function boot()
+	{
+		parent::boot();
+
+		static::created(function($user)
+		{
+			//create user profile
+			$profile = $user->profile()->create(
+						array(
+							'location' 	=> 'to be updated',
+							'about' 	=> 'to be updated',
+						));
+
+			//assign user to group
+			$group = $user->groups()->attach(2);
+
+			//create stats for newly created user
+			$stats = $user->stats()->create(
+					array(
+						'posts_count' 						=> 0,
+						'conversations_started_count' 		=> 0,
+						'conversations_participated_count' 	=> 0,
+						'last_post_id' 						=> 0
+						));
+		});
+	}
+
 	public function listGroups()
 	{
 		$groups = array();

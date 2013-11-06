@@ -1,5 +1,6 @@
 <?php namespace Eubby\Controllers;
 
+use Eubby\Models\Profile;
 use View, Input, Redirect, Auth, Request;
 
 class UserController extends BaseController
@@ -36,10 +37,12 @@ class UserController extends BaseController
 
 		if ($this->user->isValid($user_data))
 		{
+			//create user
 			$user = $this->user->create($user_data);
 
 			//send activation email
 			$this->sendActivationEmail($user);
+
 			return Redirect::back()->with('success', 'Hi ' . $user->username . ', please activate your account by clicking on the link in the confirmation email.');
 		}
 

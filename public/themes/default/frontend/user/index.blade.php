@@ -23,6 +23,7 @@
                         </td>
                     </tr> 
                     @endforeach
+                    <tr><td colspan="4">{{ $members->links() }}</td> </tr>
                 </tbody>
           	</table>
         </div>
