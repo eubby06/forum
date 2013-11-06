@@ -27,7 +27,7 @@
 
 ```
 
-- Please change the default user model to:
+- Please change the default user model in app/config/auth.php to:
 
 ```php
 
@@ -41,7 +41,7 @@
  php artisan forum:install
 ```
 
-- The above command will ask you to create and admin user account
+- The above command will ask you to create an admin user account and 
 
 ### Frontend
 - By default it is available on http://www.domain.com/forum
