@@ -8,14 +8,14 @@
                     <div class="avatar span1">
                         <div class="thumbnail"><img src="http://www.gravatar.com/avatar/9cc2b4c5c1cf6b9cf6e0c7a82e4434e2?d=http%3A%2F%2Flaracasts.com%2Fforum%2Fcore%2Fskin%2Favatar.png&s=64"></div>
                     </div>
-                    <div class="post span11 well well-small">
+                    <div class="span11 well well-small">
                         <div class="info">
                             <a class="poster"><strong>{{ Acl::getUser()->username }}</strong></a>
                             <span class="muted">{{ Acl::getUser()->profile->location }}</span>
                             <input type="submit" class="btn pull-right" value="Start Conversation">
                         </div>
                         <hr />
-                        <div class="post">
+                        <div class="-create-post">
                          @if ($private_user)
                             <p> {{ Acl::getUser()->getGravatar(array('img' => true, 's' => 22)) }} 
                                 <a href="#"><strong>{{ Acl::getUser()->username }}</strong></a> and 

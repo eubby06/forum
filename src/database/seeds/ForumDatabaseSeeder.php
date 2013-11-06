@@ -12,7 +12,7 @@ class ForumDatabaseSeeder extends Seeder {
 		$this->call('GroupSeeder');
 		$this->call('ForumStatsSeeder');
 		$this->call('ForumSettingsSeeder');
-		$this->call('ForumUserSeeder');
+		//$this->call('ForumUserSeeder');
 	}
 
 }

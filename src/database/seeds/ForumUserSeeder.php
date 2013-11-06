@@ -14,7 +14,7 @@ class ForumUserSeeder extends Seeder
 		
 		$user = new User;
 		$user->email = 'eubby06@yahoo.com';
-		$user->username = 'eubby06';
+		$user->username = 'eubby';
 		$user->password = 'admin';
 		$user->active = 1;
 		$user->ip_address = '127.0.0.1';
