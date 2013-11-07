@@ -7,7 +7,7 @@ class IndexController extends BaseController
 	public function getIndex()
 	{
 
-		$this->notifier->setUser($this->acl->getUser());
+		$this->provider->getNotifier()->setUser($this->provider->getAcl()->getUser());
 
 		$keywords = (Input::get('keywords')) ? strtolower(Input::get('keywords')) : null;
 		$searchError = false; //this allows us to display diff message in the view
@@ -15,7 +15,7 @@ class IndexController extends BaseController
 		if( is_null($keywords))
 		{
 			//get all conversations in this forum
-			$conversations 		= $this->conversation->orderby('updated_at', 'desc')->get();
+			$conversations 		= $this->provider->getConversation()->orderby('updated_at', 'desc')->get();
 		}
 		else
 		{
@@ -23,7 +23,7 @@ class IndexController extends BaseController
 			$searchError 		= true;
 			
 			//get all conversations in this forum
-			$conversations 		= $this->conversation->where('title','LIKE', '%'.$keywords.'%')
+			$conversations 		= $this->provider->getConversation()->where('title','LIKE', '%'.$keywords.'%')
 												 ->orderby('updated_at', 'desc')
 												 ->get();
 		}
@@ -33,18 +33,18 @@ class IndexController extends BaseController
 		$unread_count 		= 0;
 
 		//update read/unread posts
-		if ($this->acl->check()) 
+		if ($this->provider->getAcl()->check()) 
 		{
 			//loop through all conversations
 			for ($i=0; $i<$conversations->count(); $i++)
 				{
-					$channel = $this->channel->withTrashed()->where('id','=',$conversations[0]->channel_id)->first();
+					$channel = $this->provider->getChannel()->withTrashed()->where('id','=',$conversations[0]->channel_id)->first();
 
 					//check if this conversation belongs to active channel, exclude if it belongs to deleted channel
 					if (is_null($channel->deleted_at))
 					{
 						//get user last visit date to get unread posts in this conversation
-						$last_visit = $this->acl->lastVisit($conversations[$i]);
+						$last_visit = $this->provider->getAcl()->lastVisit($conversations[$i]);
 						$conversations[$i]->unread = $conversations[$i]->unreadPostsCount($last_visit);				
 					}
 					else

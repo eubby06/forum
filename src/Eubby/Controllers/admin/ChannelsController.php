@@ -6,7 +6,7 @@ class ChannelsController extends AdminController
 {
 	public function getIndex()
 	{
-		$channels = $this->channel->withTrashed()->get();
+		$channels = $this->provider->getChannel()->withTrashed()->get();
 		$this->layout->content = View::make("theme::{$this->theme}.backend.channels.index")
 										->with('channels', $channels);
 		return $this->layout;
@@ -16,7 +16,7 @@ class ChannelsController extends AdminController
 	{
 		if (is_null($cid)) return Redirect::back();
 
-		$channel = $this->channel->find($cid);
+		$channel = $this->provider->getChannel()->find($cid);
 		$channel->delete();
 
 		return Redirect::back()->with('success', 'Channel has been removed.');
@@ -26,7 +26,7 @@ class ChannelsController extends AdminController
 	{
 		if (is_null($cid)) return Redirect::back();
 
-		$channel = $this->channel->withTrashed('id','=',$cid)->first();
+		$channel = $this->provider->getChannel()->withTrashed('id','=',$cid)->first();
 		$channel->restore();
 
 		return Redirect::back()->with('success', 'Channel has been restored.');
@@ -36,7 +36,7 @@ class ChannelsController extends AdminController
 	{
 		if (is_null($cid)) return Redirect::back();
 
-		$channel = $this->channel->find($cid);
+		$channel = $this->provider->getChannel()->find($cid);
 		$permissions = $channel->permissions;
 
 		$permissions_data = array();
@@ -52,7 +52,7 @@ class ChannelsController extends AdminController
 		$this->layout->content = View::make("theme::{$this->theme}.backend.channels.edit")
 										->with('channel', $channel)
 										->with('permissions', $permissions_data)
-										->with('groups', $this->group->defaults);
+										->with('groups', $this->provider->getGroup()->defaults);
 
 		return $this->layout;
 	}
@@ -61,7 +61,7 @@ class ChannelsController extends AdminController
 	{
 		if (is_null($cid)) return Redirect::back();
 
-		$channel = $this->channel->find($cid);
+		$channel = $this->provider->getChannel()->find($cid);
 
 		$channel_data = array(
 			'name' 					=> Input::get('name'),
@@ -76,7 +76,7 @@ class ChannelsController extends AdminController
 		{
 			list($group, $action) = explode('_', $permission);
 
-			$group_obj = $this->group->where('name',ucfirst($group))->first();
+			$group_obj = $this->provider->getGroup()->where('name',ucfirst($group))->first();
 
 			$permissions[$group_obj->id][] = $action;
 		}
@@ -115,7 +115,7 @@ class ChannelsController extends AdminController
 
 		//get all groups to compare against the updated groups
 		$groups_all = array();
-		$group_ids = $this->group->select('id')->get();
+		$group_ids = $this->provider->getGroup()->select('id')->get();
 
 		//create an array of group ids
 		foreach ($group_ids as $group)
@@ -148,7 +148,7 @@ class ChannelsController extends AdminController
 	public function getCreate()
 	{
 		$this->layout->content = View::make("theme::{$this->theme}.backend.channels.create")
-									->with('groups', $this->group->defaults);
+									->with('groups', $this->provider->getGroup()->defaults);
 		return $this->layout;
 	}
 
@@ -167,14 +167,14 @@ class ChannelsController extends AdminController
 		{
 			list($group, $action) = explode('_', $permission);
 
-			$group_obj = $this->group->where('name','=',ucfirst($group))->first();
+			$group_obj = $this->provider->getGroup()->where('name','=',ucfirst($group))->first();
 
 			$permissions[$group_obj->id][] = $action;
 		}
 
-		if ($this->channel->isValid($channel_data))
+		if ($this->provider->getChannel()->isValid($channel_data))
 		{
-			$channel = $this->channel->create($channel_data);
+			$channel = $this->provider->getChannel()->create($channel_data);
 			$permissions_data = array();
 
 			$added_groups = array();
@@ -198,7 +198,7 @@ class ChannelsController extends AdminController
 
 			//get all groups to compare against the updated groups
 			$groups_all = array();
-			$group_ids = $this->group->select('id')->get();
+			$group_ids = $this->provider->getGroup()->select('id')->get();
 
 			//create an array of group ids
 			foreach ($group_ids as $group)
@@ -226,6 +226,6 @@ class ChannelsController extends AdminController
 			return Redirect::route('admin_channels')->with('success', 'Channel has been created.');
 		}
 
-		return Redirect::back()->withErrors($this->channel->validationErrors());
+		return Redirect::back()->withErrors($this->provider->getChannel()->validationErrors());
 	}
 }

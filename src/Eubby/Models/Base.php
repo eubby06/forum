@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 use Validator;
 
-class Base extends Model {
+abstract class Base extends Model {
 
 	public $timestamps 						= true;
 

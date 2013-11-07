@@ -15,7 +15,7 @@
 						<td width="15%">Last active {{ $member->lastActive() }}</td>
 						<td width="10%">{{ $member->posts->count() }} posts</td>
                         <td width="15%">
-                        	@if (Acl::getUser() && $member->id == Acl::getUser()->id)
+                        	@if (Provider::getAcl()->getUser() && $member->id == Provider::getAcl()->getUser()->id)
                         		<button class="btn btn-small" disabled >Start Private Conversation</button>
                         	@else
                         		<a class="btn btn-small" class="title" href="{{ route('start_conversation', $member->username) }}">Start Private Conversation</a>

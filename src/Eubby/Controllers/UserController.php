@@ -8,10 +8,10 @@ class UserController extends BaseController
 	public function getLogout()
 	{
 		//deactive from sessions table
-		$this->session->deactivate(Auth::user()->id);
+		$this->provider->getSession()->deactivate(Auth::user()->id);
 
 		//logout from session
-		$this->acl->logout();
+		$this->provider->getAcl()->logout();
 
 		return Redirect::route('home')->with('success', 'You have logged out successfully.');		
 	}
@@ -35,10 +35,10 @@ class UserController extends BaseController
 			'active' 					=> 0
 			);
 
-		if ($this->user->isValid($user_data))
+		if ($this->provider->getUser()->isValid($user_data))
 		{
 			//create user
-			$user = $this->user->create($user_data);
+			$user = $this->provider->getUser()->create($user_data);
 
 			//send activation email
 			$this->sendActivationEmail($user);
@@ -46,7 +46,7 @@ class UserController extends BaseController
 			return Redirect::back()->with('success', 'Hi ' . $user->username . ', please activate your account by clicking on the link in the confirmation email.');
 		}
 
-		return Redirect::back()->withInput()->withErrors($this->user->validationErrors());
+		return Redirect::back()->withInput()->withErrors($this->provider->getUser()->validationErrors());
 	}
 
 	public function getLogin()
@@ -62,10 +62,10 @@ class UserController extends BaseController
 			'username' => Input::get('username'),
 			'password' => Input::get('password'));
 
-		if ($this->acl->attempt($login_data, Input::has('remember_me')))
+		if ($this->provider->getAcl()->attempt($login_data, Input::has('remember_me')))
 		{
 			//add user to session
-			$this->session->add(array('user_id' => $this->acl->getUser()->id, 'active' => 1, 'ip_address' => Request::getClientIp()));
+			$this->provider->getSession()->add(array('user_id' => $this->provider->getAcl()->getUser()->id, 'active' => 1, 'ip_address' => Request::getClientIp()));
 
 			return Redirect::route('home')->with('success', 'Hi ' . $login_data['username'] . ', welcome to the forum.');
 		}
@@ -75,7 +75,7 @@ class UserController extends BaseController
 
 	public function getActivate($id)
 	{
-		$user = $this->user->find($id);
+		$user = $this->provider->getUser()->find($id);
 
 		if ($user)
 		{

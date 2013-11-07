@@ -6,16 +6,16 @@ class ConversationController extends BaseController
 {
 	public function getStart($username = null)
 	{
-		if (!$this->acl->check()) return Redirect::route('login');
+		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
 
 		$private_user = false;
 
 		if (!is_null($username))
 		{
-			$private_user = $this->user->where('username',$username)->first();
+			$private_user = $this->provider->getUser()->where('username',$username)->first();
 		}
 
-		$channels = $this->channel->getKeyValuePair();
+		$channels = $this->provider->getChannel()->getKeyValuePair();
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.conversation.create")
 									->with('channels', $channels)
@@ -26,17 +26,17 @@ class ConversationController extends BaseController
 
 	public function postStart()
 	{
-		if (!$this->acl->check()) return Redirect::route('login');
+		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
 
 		$conversation_data = array(
-			'user_id' 		=> $this->acl->getUser()->id,
+			'user_id' 		=> $this->provider->getAcl()->getUser()->id,
 			'title' 		=> Input::get('title'),
 			'post' 			=> Input::get('post'),
 			'channel_id'	=> Input::get('channel_id')
 			);
 		
 		$post_data = array(
-			'user_id' 			=> $this->acl->getUser()->id,
+			'user_id' 			=> $this->provider->getAcl()->getUser()->id,
 			'message' 			=> Input::get('post'),
 			);
 
@@ -47,9 +47,9 @@ class ConversationController extends BaseController
 		$rules = array('post' => 'required');
 
 		//set extra validation rule
-		$this->conversation->setValidationRules($rules);
+		$this->provider->getConversation()->setValidationRules($rules);
 
-		if ($this->conversation->isValid($merged_data))
+		if ($this->provider->getConversation()->isValid($merged_data))
 		{
 			//unset the temp post var that was used for validation only
 			unset($conversation_data['post']);
@@ -58,11 +58,11 @@ class ConversationController extends BaseController
 			$conversation_data['slug'] = Input::get('title');
 
 			//create the conversation model
-			$conversation = $this->conversation->create($conversation_data);
+			$conversation = $this->provider->getConversation()->create($conversation_data);
 
 			//create post model with conversation id
 			$post_data['conversation_id'] = $conversation->id;
-			$post = $this->post->create($post_data);
+			$post = $this->provider->getPost()->create($post_data);
 
 			//update conversation model to include first post id 
 			$conversation->first_post_id = $post->id;
@@ -70,7 +70,7 @@ class ConversationController extends BaseController
 			$conversation->update();
 
 			//check if there's any private user, this means that this is private conversation
-			$private_user = $this->user->find(Input::get('private_user'));
+			$private_user = $this->provider->getUser()->find(Input::get('private_user'));
 
 			if ($private_user)
 			{
@@ -81,14 +81,14 @@ class ConversationController extends BaseController
 			return Redirect::route('home');
 		}
 
-		return Redirect::back()->withInput()->withErrors($this->conversation->validationErrors());
+		return Redirect::back()->withInput()->withErrors($this->provider->getConversation()->validationErrors());
 	}
 
 	public function getList($channel_slug)
 	{
-		$channel = $this->channel->select('id')->where('slug','=',$channel_slug)->firstOrFail();
+		$channel = $this->provider->getChannel()->select('id')->where('slug','=',$channel_slug)->firstOrFail();
 
-		$conversations = $this->conversation->where('channel_id','=',$channel->id)->get();
+		$conversations = $this->provider->getConversation()->where('channel_id','=',$channel->id)->get();
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.home.index")
 									->with('conversations', $conversations);
@@ -100,12 +100,12 @@ class ConversationController extends BaseController
 	{
 		if (is_null($slug)) return Redirect::back();
 
-		$conversation = $this->conversation->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
+		$conversation = $this->provider->getConversation()->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
 		
 		//check if conversation is private
 		if ($conversation->isPrivate())
 		{
-			$user_id = ($this->acl->getUser()) ? $this->acl->getUser()->id : 0;
+			$user_id = ($this->provider->getAcl()->getUser()) ? $this->provider->getAcl()->getUser()->id : 0;
 
 			//check if current user has subscribed to this
 			if (!$conversation->hasPrivateSubscriberId($user_id))
@@ -116,13 +116,13 @@ class ConversationController extends BaseController
 
 
 		//update read/unread posts
-		if ($this->acl->check()) 
+		if ($this->provider->getAcl()->check()) 
 		{
-			$this->acl->logVisit($conversation);
+			$this->provider->getAcl()->logVisit($conversation);
 			
 			//check if users has permissions to this post
-			$user_group_allowed_to_comment = $this->acl->allowedToComment($conversation->channel->id);
-			$user_group_allowed_to_view = $this->acl->allowedToView($conversation->channel->id);
+			$user_group_allowed_to_comment = $this->provider->getAcl()->allowedToComment($conversation->channel->id);
+			$user_group_allowed_to_view = $this->provider->getAcl()->allowedToView($conversation->channel->id);
 		}
 		else
 		{
@@ -147,28 +147,28 @@ class ConversationController extends BaseController
 
 	public function postReply()
 	{
-		if (!$this->acl->check()) return Redirect::route('login');
+		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
 
 		$post_data = array(
-			'user_id' 			=> $this->acl->getUser()->id,
+			'user_id' 			=> $this->provider->getAcl()->getUser()->id,
 			'conversation_id' 	=> Input::get('conversation_id'),
 			'message' 			=> Input::get('message')
 			);
 
-		if ($this->post->isValid($post_data))
+		if ($this->provider->getPost()->isValid($post_data))
 		{
-			$post = $this->post->create($post_data);
+			$post = $this->provider->getPost()->create($post_data);
 
 			return Redirect::back()->with('success', 'Reply has been posted.');
 		}
 
-		return Redirect::back()->withErrors($this->post->validationErrors());
+		return Redirect::back()->withErrors($this->provider->getPost()->validationErrors());
 	}
 
 	public function postAddSubscriber()
 	{
 		//get user based on posted var
-		$user = $this->user->where('username','=',Input::get('subscriber'))->first();
+		$user = $this->provider->getUser()->where('username','=',Input::get('subscriber'))->first();
 
 		//redirect if user is not found
 		if (is_null($user)) return Redirect::back()->withErrors('User could not be found.');
@@ -183,11 +183,11 @@ class ConversationController extends BaseController
 		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
 
 		//notifier user
-		$this->notifier->setMessage('You are added to conversation');
-		$this->notifier->setUser($user);
-		$this->notifier->setSender($this->acl->getUser());
-		$this->notifier->setNotifiableObj($this->conversation->find(Input::get('conversation_id')));
-		$this->notifier->attemptNotify();
+		$this->provider->getNotifier()->setMessage('You are added to conversation');
+		$this->provider->getNotifier()->setUser($user);
+		$this->provider->getNotifier()->setSender($this->provider->getAcl()->getUser());
+		$this->provider->getNotifier()->setNotifiableObj($this->provider->getConversation()->find(Input::get('conversation_id')));
+		$this->provider->getNotifier()->attemptNotify();
 
 		//redirect with success
 		return Redirect::back()->with('success', 'User has been added and subscribed.');
@@ -196,7 +196,7 @@ class ConversationController extends BaseController
 	public function postAjaxAddSubscriber()
 	{
 		//get user based on posted var
-		$user = $this->user->where('username','=',Input::get('subscriber'))->first();
+		$user = $this->provider->getUser()->where('username','=',Input::get('subscriber'))->first();
 
 		//redirect if user is not found
 		if (is_null($user)) return Response::json(array('result' => 'fail', 'message' => 'User not found.'));
@@ -211,12 +211,12 @@ class ConversationController extends BaseController
 		$user->subscriptions()->attach(Input::get('conversation_id'), array('type' => 'private'));
 
 		//notifier user
-		$this->notifier->setMessage('has added you to a private conversation.');
-		$this->notifier->setType('1'); // EMAIL_WHEN_ADDED_TO_CONVERSATION
-		$this->notifier->setUser($user);
-		$this->notifier->setSender($this->acl->getUser());
-		$this->notifier->setNotifiableObj($this->conversation->find(Input::get('conversation_id')));
-		$this->notifier->attemptNotify();
+		$this->provider->getNotifier()->setMessage('has added you to a private conversation.');
+		$this->provider->getNotifier()->setType('1'); // EMAIL_WHEN_ADDED_TO_CONVERSATION
+		$this->provider->getNotifier()->setUser($user);
+		$this->provider->getNotifier()->setSender($this->provider->getAcl()->getUser());
+		$this->provider->getNotifier()->setNotifiableObj($this->provider->getConversation()->find(Input::get('conversation_id')));
+		$this->provider->getNotifier()->attemptNotify();
 
 		//redirect with success
 		return Response::json(array('result' => 'success', 'message' => 'User has been added and subscribed.'));
@@ -226,7 +226,7 @@ class ConversationController extends BaseController
 	public function postAjaxRemoveSubscriber()
 	{
 		//get user based on posted var
-		$user = $this->user->where('username','=',Input::get('subscriber'))->first();
+		$user = $this->provider->getUser()->where('username','=',Input::get('subscriber'))->first();
 
 		//redirect if user is not found
 		if (is_null($user)) return Response::json(array('result' => 'fail', 'message' => 'User not found.'));
@@ -247,7 +247,7 @@ class ConversationController extends BaseController
 	public function getRemoveSubscriber()
 	{
 		//get user based on posted var
-		$user = $this->user->where('username','=',Input::get('username'))->first();
+		$user = $this->provider->getUser()->where('username','=',Input::get('username'))->first();
 
 		//redirect if user is not found
 		if (is_null($user)) return Redirect::back()->withErrors('User could not be found.');
@@ -267,13 +267,13 @@ class ConversationController extends BaseController
 
 	public function getFollow($slug = null)
 	{
-		if (!$this->acl->check()) return Redirect::route('login');
+		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
 		
 		//get logged in user
-		$user = $this->acl->getUser(); 
+		$user = $this->provider->getAcl()->getUser(); 
 
 		//get conversation based on slug
-		$conversation = $this->conversation->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
+		$conversation = $this->provider->getConversation()->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
 
 		//check if use has already subscribed
 		$subscription = $user->subscriptions()->where('conversation_id','=',$conversation->id)->first();
@@ -291,10 +291,10 @@ class ConversationController extends BaseController
 	public function getUnfollow($slug = null)
 	{
 		//get logged in user
-		$user = $this->acl->getUser();
+		$user = $this->provider->getAcl()->getUser();
 
 		//get conversation based on slug
-		$conversation = $this->conversation->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
+		$conversation = $this->provider->getConversation()->where('slug','=',$slug)->orderBy('created_at')->firstOrFail();
 
 		//check if use has already subscribed
 		$subscription = $user->subscriptions()->where('conversation_id','=',$conversation->id)->first();

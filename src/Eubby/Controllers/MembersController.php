@@ -6,7 +6,7 @@ class MembersController extends BaseController
 {
 	public function getIndex()
 	{
-		$members = $this->user->paginate(10);
+		$members = $this->provider->getUser()->paginate(10);
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.index")
 												->with('members', $members);
@@ -17,7 +17,7 @@ class MembersController extends BaseController
 	{
 		if(is_null($username)) return Redirect::back();
 
-		$member = $this->user->where('username',$username)->first();
+		$member = $this->provider->getUser()->where('username',$username)->first();
 		$profile = ($member->profile) ? $member->profile : null;
 
 		if (!is_null($member))
@@ -36,7 +36,7 @@ class MembersController extends BaseController
 	{
 		if(is_null($username)) return Redirect::back();
 
-		$member = $this->user->where('username',$username)->first();
+		$member = $this->provider->getUser()->where('username',$username)->first();
 
 		if (!is_null($member))
 		{
@@ -53,7 +53,7 @@ class MembersController extends BaseController
 	{
 		if(is_null($username)) return Redirect::back();
 
-		$member = $this->user->where('username',$username)->first();
+		$member = $this->provider->getUser()->where('username',$username)->first();
 
 		if (!is_null($member))
 		{
@@ -75,7 +75,7 @@ class MembersController extends BaseController
 		//no need to proceed if two vars are null
 		if (is_null($do) || is_null($uid) || is_null($group)) return Redirect::back();
 
-		$member = $this->user->find($uid);
+		$member = $this->provider->getUser()->find($uid);
 
 		if ($member)
 		{
@@ -95,8 +95,8 @@ class MembersController extends BaseController
 		if (is_null($do) || is_null($uid)) return Redirect::back();
 
 		//get member
-		$member = $this->user->find($uid);
-		$groups = $this->group->groupsForHtml();
+		$member = $this->provider->getUser()->find($uid);
+		$groups = $this->provider->getGroup()->groupsForHtml();
 
 		if ($do == 'change')
 		{
@@ -114,12 +114,12 @@ class MembersController extends BaseController
 	{
 		if(is_null($id)) return Redirect::back();
 
-		$moderator = $this->acl->getUser();
-		$member = $this->user->find($id);
+		$moderator = $this->provider->getAcl()->getUser();
+		$member = $this->provider->getUser()->find($id);
 
 		if (is_null($member->ban))
 		{
-			$this->ban->create(array(
+			$this->provider->getBan()->create(array(
 				'user_id' => $member->id,
 				'moderator_id' => $moderator->id
 				));
@@ -140,7 +140,7 @@ class MembersController extends BaseController
 	{
 		if(is_null($id)) return Redirect::back();
 
-		$member = $this->user->find($id);
+		$member = $this->provider->getUser()->find($id);
 
 		if ($member->isSuspended())
 		{
@@ -156,7 +156,7 @@ class MembersController extends BaseController
 	{
 		if(is_null($id)) return Redirect::back();
 
-		$member = $this->user->find($id);
+		$member = $this->provider->getUser()->find($id);
 
 		if ($member)
 		{

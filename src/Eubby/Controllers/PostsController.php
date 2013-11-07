@@ -9,7 +9,7 @@ class PostsController extends BaseController
 	{
 		$pid = Input::get('pid');
 		
-		$post = $this->post->find($pid);
+		$post = $this->provider->getPost()->find($pid);
 
 		if (is_null($post)) return Response::json(array('result' => 'fail', 'message' => 'Post not found.'));
 

@@ -18,7 +18,7 @@
 
     <a href="#" class="back-to-top">Back to Top</a>
 
-    @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
+    @if (Provider::getAcl()->check() && (Provider::getAcl()->getUser()->id == $conversation->user_id))
 
     <div class="row-fluid">
         <div class="span10 offset1">
@@ -73,7 +73,7 @@
                             @if ($post->user)
                             <a href="{{ route('members_profile', $post->user->username) }}" class="poster"><strong>{{ $post->user->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ ($post->user->profile) ? $post->user->profile->location : 'unavailable location' }}</span>
-                                @if (Acl::check() && (Acl::getUser()->id == $conversation->user_id))
+                                @if (Provider::getAcl()->check() && (Provider::getAcl()->getUser()->id == $conversation->user_id))
                                 <span class="pull-right">
                                     <a href="#" class="-quote" id="{{ $post->id }}" data-user="{{ $post->user->username }}">quote</a> | 
                                     <a href="#" class="-edit" id="{{ $post->id }}" >edit</a> | 
@@ -92,19 +92,19 @@
                 </div>
                 @endforeach
 
-               @if (Acl::check() && $user_allowed_to_comment)
+               @if (Provider::getAcl()->check() && $user_allowed_to_comment)
 
                 {{ Form::open(array('route' => array('post_reply', $conversation->slug))) }}
                 <div class="row-fluid" id="reply">
                     <div class="avatar span1">
-                        <div class="thumbnail"><a href="{{ route('members_profile', Acl::getUser()->username) }}">
-                            {{ Acl::getUser()->getGravatar(array('img' => true, 's' => 64)) }}
+                        <div class="thumbnail"><a href="{{ route('members_profile', Provider::getAcl()->getUser()->username) }}">
+                            {{ Provider::getAcl()->getUser()->getGravatar(array('img' => true, 's' => 64)) }}
                         </a></div>
                     </div>
                     <div class="span11 well well-small">
                         <div class="info">
-                                 <a href="{{ route('members_profile', Acl::getUser()->username) }}" class="poster"><strong>{{ Acl::getUser()->username }}</strong></a>
-                            <span class="muted">{{ $post->created_at->diffForHumans() }} {{ (Acl::getUser()->profile) ? Acl::getUser()->profile->location : 'unavailable location' }}</span>
+                                 <a href="{{ route('members_profile', Provider::getAcl()->getUser()->username) }}" class="poster"><strong>{{ Provider::getAcl()->getUser()->username }}</strong></a>
+                            <span class="muted">{{ $post->created_at->diffForHumans() }} {{ (Provider::getAcl()->getUser()->profile) ? Provider::getAcl()->getUser()->profile->location : 'unavailable location' }}</span>
                             <input type="submit" class="btn pull-right" value="Post a Reply">
                         </div>
                         <hr />
@@ -118,9 +118,9 @@
 
                 @else
                 <div class="row-fluid">
-                    @if (Acl::check() && !$user_allowed_to_comment)
+                    @if (Provider::getAcl()->check() && !$user_allowed_to_comment)
                         <div class="avatar span1">
-                            <div class="thumbnail"><a href="{{ route('members_profile', Acl::getUser()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
+                            <div class="thumbnail"><a href="{{ route('members_profile', Provider::getAcl()->getUser()->username) }}"><img src="{{ theme_asset('images/avatars/0.png') }}"></a></div>
                         </div>
                         <div class="post span11 well well-small">
                             <div class="info">
@@ -158,7 +158,7 @@
                         </ul>
                     </div>
 
-                    @if (Acl::check() && Acl::getUser()->hasSubscription($conversation->id))
+                    @if (Provider::getAcl()->check() && Provider::getAcl()->getUser()->hasSubscription($conversation->id))
                         <a class="btn btn-block" href="{{ route('unfollow_conversation', $conversation->slug, 'unfollow') }}"><i class="icon-star"></i> Unfollow</a>
                     @else
                         <a class="btn btn-block" href="{{ route('follow_conversation', $conversation->slug, 'follow') }}"><i class="icon-star"></i> Follow</a>

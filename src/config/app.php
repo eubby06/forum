@@ -9,7 +9,8 @@ return array(
 
 							'Acl'			=> 'Eubby\Libs\Facades\Acl',
 							'Settings'  	=> 'Eubby\Libs\Facades\Settings',
-							'Notifier'		=> 'Eubby\Libs\Notification\Notifier'
+							'Notifier'		=> 'Eubby\Libs\Facades\Notifier',
+							'Provider'		=> 'Eubby\Libs\Facades\Provider'
 						),    
 
 );

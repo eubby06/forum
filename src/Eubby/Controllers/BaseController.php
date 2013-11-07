@@ -1,68 +1,24 @@
 <?php namespace Eubby\Controllers;
 
-use Controller, Config, View;
-use Eubby\Models\User;
-use Eubby\Models\Channel;
-use Eubby\Models\Conversation;
-use Eubby\Models\Post;
-use Eubby\Models\Session;
-use Eubby\Models\Group;
-use Eubby\Models\Ban;
-use Eubby\Models\Settings;
-use Acl;
-use Notifier;
-use Mail;
+use Controller, 
+	Config, 
+	View;
 
-class BaseController extends Controller {
+use Eubby\Libs\Provider\ProviderInterface;
 
-	protected $acl 				= null;
-
-	protected $user 			= null;
-
-	protected $channel 			= null;
-
-	protected $conversation 	= null;
-
-	protected $post 			= null;
-
-	protected $session 			= null;
-
-	protected $mailer			= null;
-
-	protected $group 			= null;
-
-	protected $settings 		= null;
-
-	protected $ban 				= null;
+abstract class BaseController extends Controller {
 
 	protected $layout 			= null;
 
-	protected $notifier 		= null;
+	protected $theme 			= null;
+	
+	protected $provider 		= null;
 
 
-	public function __construct(
-		User $user, 
-		Channel $channel, 
-		Conversation $conversation, 
-		Post $post, 
-		Session $session,
-		Group $group,
-		Ban $ban,
-		Settings $settings,
-		Notifier $notifier)
+	public function __construct(ProviderInterface $provider)
 	{
-		$this->acl 			= Acl::getFacadeRoot();
-		$this->user 		= ($user) ? $user : new User;
-		$this->channel 		= ($channel) ? $channel : new Channel;
-		$this->conversation = ($conversation) ? $conversation : new Conversation;
-		$this->post 		= ($post) ? $post : new Post;
-		$this->session 		= ($session) ? $session : new Session;
-		$this->group 		= ($group) ? $group : new Group;
-		$this->ban 			= ($ban) ? $ban : new Ban;
-		$this->settings 	= ($settings) ? $settings : new Settings;
-		$this->notifier 	= ($notifier) ? $notifier : new Notifier;
-		$this->mailer 		= Mail::getFacadeRoot();
-		$this->theme 		= $this->settings->find(1)->theme;
+		$this->provider 	= $provider;
+		$this->theme 		= $this->provider->getSettings()->find(1)->theme;
 		$this->layout 		= "theme::{$this->theme}.layouts.single_column";
 	}
 
@@ -79,10 +35,10 @@ class BaseController extends Controller {
 	{
 		$stats = array();
 
-		$stats['online'] 			= $this->session->where('active','=',1)->get()->count();
-		$stats['members']			= $this->user->all()->count();
-		$stats['posts'] 			= $this->post->all()->count();
-		$stats['conversations'] 	= $this->conversation->all()->count();	
+		$stats['online'] 			= $this->provider->getSession()->where('active','=',1)->get()->count();
+		$stats['members']			= $this->provider->getUser()->all()->count();
+		$stats['posts'] 			= $this->provider->getPost()->all()->count();
+		$stats['conversations'] 	= $this->provider->getConversation()->all()->count();	
 
 		$this->layout->statistics = View::make("theme::{$this->theme}.__partials.statistics")
 									->with('stats', $stats);

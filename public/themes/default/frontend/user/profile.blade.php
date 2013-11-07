@@ -14,7 +14,7 @@
                     <li>Last active {{ $member->lastActive() }}</li>
                 </ul>
             </div>
-             @include('theme::'.Settings::getTheme().'.frontend.user.control')
+             @include('theme::'.Provider::getSettings()->getTheme().'.frontend.user.control')
         </div>
         <hr />
     <ul class="nav nav-tabs">
@@ -25,7 +25,7 @@
 
     <table class="table table-striped">
         <tbody>
-        @if (Acl::check() && Acl::getUser()->username == $member->username)
+        @if (Provider::getAcl()->check() && Provider::getAcl()->getUser()->username == $member->username)
             <tr>
                 <td colspan="2"><a href="{{ route('settings') }}" class="btn btn-primary">Edit Profile</a></td>
             </tr>

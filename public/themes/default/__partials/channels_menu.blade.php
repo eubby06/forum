@@ -2,7 +2,7 @@
     <ul class="nav nav-pills span7">
       <li class=""><a href="{{ route('home') }}"><i class="icon-list"></i> All Channels</a></li>
 
-      @foreach (Eubby\Models\Channel::all() as $channel)
+      @foreach (Provider::getChannel()->all() as $channel)
         <li class=""><a href="{{ route('list_conversations', $channel->slug) }}">{{ $channel->name }}</a></li>
       @endforeach
 

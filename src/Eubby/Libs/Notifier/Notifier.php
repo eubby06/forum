@@ -1,5 +1,6 @@
-<?php namespace Eubby\Libs\Notification;
+<?php namespace Eubby\Libs\Notifier;
 
+use Eubby\Models\Notification;
 use Eubby\Models\Settings;
 use Exception, Mail;
 
@@ -25,9 +26,9 @@ class Notifier implements NotifierInterface
 
 	protected $template 		= null;
 
-	public function __construct(\Eubby\Models\Notification $model)
+	public function __construct()
 	{
-		$this->model = $model;
+		$this->model = new Notification();
 
 		//set mail template for the notification
 		$theme = Settings::find(1)->theme;

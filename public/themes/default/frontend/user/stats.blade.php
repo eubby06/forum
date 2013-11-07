@@ -14,7 +14,7 @@
                     <li>Last active {{ $member->lastActive() }}</li>
                 </ul>
             </div>
-            @include('theme::'.Settings::getTheme().'.frontend.user.control')
+            @include('theme::'.Provider::getSettings()->getTheme().'.frontend.user.control')
         </div>
         <hr />
         

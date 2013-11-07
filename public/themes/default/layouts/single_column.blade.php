@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{ Eubby\Models\Settings::find(1)->title }}</title>
+    <title>{{ Provider::getSettings()->find(1)->title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -17,11 +17,11 @@
 
   <body>
 
-      @include('theme::'.Settings::getTheme().'.__partials.top_navigation')
+      @include('theme::'.Provider::getSettings()->getTheme().'.__partials.top_navigation')
 
     <div class="container-fluid">
-      @include('theme::'.Settings::getTheme().'.__partials.channels_menu')
-      @include('theme::'.Settings::getTheme().'.__partials.errors')
+      @include('theme::'.Provider::getSettings()->getTheme().'.__partials.channels_menu')
+      @include('theme::'.Provider::getSettings()->getTheme().'.__partials.errors')
       @yield('content')
       <hr />
       @yield('statistics')

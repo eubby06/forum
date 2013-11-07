@@ -1,4 +1,4 @@
-<?php namespace Eubby\Libs\Notification;
+<?php namespace Eubby\Libs\Notifier;
 
 interface NotifierInterface
 {

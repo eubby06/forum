@@ -205,7 +205,7 @@ class Conversation extends Base implements NotifierInterface
 
 	public function autoFollow()
 	{
-		$settings = unserialize(Acl::getUser()->profile->notifications);
+		$settings = Acl::getUser()->profile->notifications ? unserialize(Acl::getUser()->profile->notifications) : array() ;
 		$type = 4; //follow conversation that user has replied to
 
 		if (in_array($type, $settings))

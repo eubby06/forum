@@ -1,4 +1,4 @@
-@if (Acl::isAdmin() && Acl::getUser()->id != $member->id)
+@if (Provider::getAcl()->isAdmin() && Provider::getAcl()->getUser()->id != $member->id)
 <div class="span2">
         <div class="btn-group btn-block">
             <button class="btn"><i class="icon-asterisk"></i> Controls</button>

@@ -36,12 +36,11 @@
 ```
 
 - And run the following command in the terminal to start installing the Forum package
+- Please note that this command will ask you to create an admin user account before installing the package
 
 ```
  php artisan forum:install
 ```
-
-- The above command will ask you to create an admin user account and 
 
 ### Frontend
 - By default it is available on http://www.domain.com/forum

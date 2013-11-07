@@ -29,6 +29,7 @@ class ForumServiceProvider extends ServiceProvider {
 		$this->commands('forum.command');
 
 		$this->loadAliases();
+
 	}
 
 	/**
@@ -49,7 +50,13 @@ class ForumServiceProvider extends ServiceProvider {
 			return $this->guessPackagePath() . '/config/';
 		});
 
-		//set acl
+		$this->app->bind('Eubby\Libs\Provider\ProviderInterface', 'Eubby\Libs\Provider\Provider');
+
+		$this->app->singleton('Provider', function()
+		{
+			return new \Eubby\Libs\Provider\Provider();
+		});
+
 		$this->app->singleton('Acl', function()
 		{
 			return new \Eubby\Libs\Acl\Acl();
@@ -64,7 +71,7 @@ class ForumServiceProvider extends ServiceProvider {
 		{
 			$notificationModel = new \Eubby\Models\Notification();
 
-			return new \Eubby\Libs\Notification\Notifier($notificationModel);
+			return new \Eubby\Libs\Notifier\Notifier($notificationModel);
 		});
 	}
 
