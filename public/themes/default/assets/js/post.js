@@ -5,7 +5,7 @@
     var duration = 500;
     var addMemberUrl = '/forum/subscription/ajaxaddsubscriber';
     var removeMemberUrl = '/forum/subscription/ajaxremovesubscriber';
-    var removePostUrl = '/posts/ajaxdelete';
+    var removePostUrl = '/forum/posts/ajaxdelete';
 
     $(window).scroll(function() {
           if ($(this).scrollTop() > offset) {
@@ -112,6 +112,39 @@
 					$('#-confirm-delete-modal').data('pid', $comment_id).modal('show')
 
             		app.delete($comment_id);
+				})
+				.on('click', '.-edit', function(e) {
+					e.preventDefault();
+
+					var $c_id = $(this).attr("id");
+					var $message_div = $('#message-' + $c_id);
+
+					$message_div.replaceWith(function()
+					{
+						var $c_post = $(this).html();
+
+						$c_post = $c_post.replace(/\<blockquote\>/g, '[blockquote]')
+		    			.replace(/\<\/blockquote\>/g, '[/blockquote]')
+		    			.replace(/\<strong\>/g, '[user]')
+		    			.replace(/\<\/strong\>/g, '[/user]')
+		    			.replace(/\<br\>/g, '\r\n');
+
+						return '<textarea class="span12 active -editedTextarea" id="' + $c_id + '">' + $c_post + '</textarea>';
+					})
+
+					$(this).text('save').removeClass().addClass('-save');
+				})
+				.on('click', '.-save', function(e)
+				{
+					e.preventDefault();
+					var $c_id = $(this).attr("id");
+
+					$('.-editedTextarea').replaceWith(function()
+					{
+						return '<div id="message-'+$c_id+'">' + $(this).val() + '</div>';
+					});
+
+					$(this).text('edit').removeClass().addClass('-edit');
 				})
 				.on('click', '.-quote', function(e) {
 					e.preventDefault();

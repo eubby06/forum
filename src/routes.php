@@ -24,6 +24,7 @@ Route::group(array('prefix' => 'forum'), function()
 		));
 
 	Route::post('user/login', array(
+		'before' => 'csrf',
 		'as' 	=> 'post_login',
 		'uses' 	=> 'Eubby\Controllers\UserController@postLogin'
 		));
@@ -204,7 +205,7 @@ Route::group(array('prefix' => 'forum'), function()
 });
 
 
-Route::group(array('prefix' => 'admin', 'before' => 'admin_auth'), function()
+Route::group(array('prefix' => 'admin'), function()
 {
 		Route::get('/', array(
 			'as' 	=> 'admin_dashboard',

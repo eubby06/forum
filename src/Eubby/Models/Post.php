@@ -146,24 +146,19 @@ class Post extends Base
 
 		if (!empty($message));
 		{
-			$message = str_replace(array('[/quote]'),'',$message);
-
 			//get quote post id
-			preg_match("/\[quote=.*\]/", $message, $quote);
+			preg_match("/\[quote=.*?\]/", $message, $quote);
 
 			if (!empty($quote))
 			{
 				//get id and find the post by id
-				//$id = str_replace(array('[quote=',']'),'',$quote[0]);
 				$username = str_replace(array('[quote=',']'),'',$quote[0]);
-
-				//$post = \Eubby\Models\Post::find($id);
 
 				$message = str_replace(
 								array($quote[0],'[/quote]'), 
 								array('[blockquote][user]' . $username . '[/user] ','[/blockquote]'), 
 								$message);
-
+	
 				return $message;
 			}
 
