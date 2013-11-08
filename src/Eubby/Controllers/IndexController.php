@@ -15,7 +15,10 @@ class IndexController extends BaseController
 		if( is_null($keywords))
 		{
 			//get all conversations in this forum
-			$conversations 		= $this->provider->getConversation()->orderby('updated_at', 'desc')->get();
+			$conversations 		= $this->provider->getConversation()
+												 ->where('active', 1)
+												 ->orderby('updated_at', 'desc')
+												 ->get();
 		}
 		else
 		{
@@ -23,7 +26,9 @@ class IndexController extends BaseController
 			$searchError 		= true;
 			
 			//get all conversations in this forum
-			$conversations 		= $this->provider->getConversation()->where('title','LIKE', '%'.$keywords.'%')
+			$conversations 		= $this->provider->getConversation()
+												 ->where('active', 1)
+												 ->where('title','LIKE', '%'.$keywords.'%')
 												 ->orderby('updated_at', 'desc')
 												 ->get();
 		}

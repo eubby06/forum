@@ -44,3 +44,7 @@ blockquote{border:1px solid #333; color:#999; padding:5px 20px; font-style:itali
     /* prevent horizontal scrollbar */
     overflow-x: hidden;
   }
+
+bold{font-weight:bold;}
+italic{font-style:italic;}
+textarea.-editedTextarea{height:200px!important;}

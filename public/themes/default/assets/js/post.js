@@ -6,6 +6,7 @@
     var addMemberUrl = '/forum/subscription/ajaxaddsubscriber';
     var removeMemberUrl = '/forum/subscription/ajaxremovesubscriber';
     var removePostUrl = '/forum/posts/ajaxdelete';
+    var updatePostUrl = '/forum/posts/ajaxupdate';
 
     $(window).scroll(function() {
           if ($(this).scrollTop() > offset) {
@@ -17,6 +18,26 @@
 
 	application.Model= function (spec) {
 		var self = this;
+
+		self.convertBBTags = function(text) {
+			var text = text.replace(/\[blockquote\]/g, '<blockquote>')
+			    		.replace(/\[\/blockquote\]/g, '</blockquote>')
+			    		.replace(/\[strong\]/g, '<strong>')
+			    		.replace(/\[\/strong\]/g, '</strong>')
+			    		.replace(/\r\n|\r|\n/g,"<br />");
+		};
+
+		self.wrapText = function(textArea, openTag, closeTag) {
+					var openTag = openTag;
+					var closeTag = closeTag;
+					var textArea = $(textArea);
+					var len = textArea.val().length;
+					var start = textArea[0].selectionStart;
+					var end = textArea[0].selectionEnd;
+					var selectedText = textArea.val().substring(start, end);
+					var replacement = openTag + selectedText + closeTag;
+					textArea.val(textArea.val().substring(0, start) + replacement + textArea.val().substring(end, len));
+		};
 
 		self.removePost = function(id) {
 			$.ajax({
@@ -33,8 +54,12 @@
 			});
 		};
 
-		self.quote = function() {
-			alert('quoted');
+		self.updatePost = function(text, id) {
+			$.ajax({
+				type: 'POST',
+				url: updatePostUrl,
+				data: {text:text, id:id}
+			});
 		};
 
 		self.addMember = function(username, cid) {
@@ -77,23 +102,46 @@
 			});
 		};
 
+		self.getSelected = function() {
+			 var t = '';
+
+			  if(window.getSelection){
+			    t = window.getSelection();
+			  }else if(document.getSelection){
+			    t = document.getSelection();
+			  }else if(document.selection){
+			    t = document.selection.createRange().text;
+			  }
+			  return t;
+		};
+
 		return self;
 	};
 
-	application.Controller = function(app, selector) {
-		var $wrapper = $(selector || window.document);
+	application.Controller = function(app, element) {
+		var $wrapper = $(element || window.document);
 
 		$(".post").each(function() {
 
 		    var text = $(this).html();
 
-		    text = text.replace(/\[blockquote\]/g, '<blockquote>')
-		    			.replace(/\[\/blockquote\]/g, '</blockquote>')
-		    			.replace(/\[user\]/g, '<strong>')
-		    			.replace(/\[\/user\]/g, '</strong>')
-		    			.replace(/\r\n|\r|\n/g,"<br />");
+		    text = text.replace(/\[/g, '<')
+		    			.replace(/\]/g, '>')
+		    			.replace(/\[\//g, '</')
+		    			.replace(/\r\n|\r|\n/g, "<br>")
+		    			.replace(/<code>/, '<pre><code data-language="php">')
+		    			.replace(/<\/code>/, '</code></pre>');
 
 		    $(this).html(text);
+
+		    var code = $('.post code').html();
+
+		    if (code != undefined)
+		    {
+		    	code = code.replace(/<br>/g, '\r');
+		    	$('.post code').html(code);
+		    }
+
 		});
 
 		$wrapper
@@ -127,7 +175,9 @@
 		    			.replace(/\<\/blockquote\>/g, '[/blockquote]')
 		    			.replace(/\<strong\>/g, '[user]')
 		    			.replace(/\<\/strong\>/g, '[/user]')
-		    			.replace(/\<br\>/g, '\r\n');
+		    			.replace(/\<br\>/g, '\r\n')
+						.replace(/<pre>/, '')
+		    			.replace(/<\/pre>/, '');
 
 						return '<textarea class="span12 active -editedTextarea" id="' + $c_id + '">' + $c_post + '</textarea>';
 					})
@@ -137,11 +187,26 @@
 				.on('click', '.-save', function(e)
 				{
 					e.preventDefault();
+
 					var $c_id = $(this).attr("id");
+
+					var $edited_text = $('.-editedTextarea').val();
+
+					app.updatePost($edited_text, $c_id);
 
 					$('.-editedTextarea').replaceWith(function()
 					{
-						return '<div id="message-'+$c_id+'">' + $(this).val() + '</div>';
+						var text = $(this).val();
+
+		    			text = text.replace(/\[blockquote\]/g, '<blockquote>')
+			    			.replace(/\[\/blockquote\]/g, '</blockquote>')
+			    			.replace(/\[user\]/g, '<strong>')
+			    			.replace(/\[\/user\]/g, '</strong>')
+			    			.replace(/\r\n|\r|\n/g,"<br />")
+							.replace(/<code>/, '<pre><code>')
+		    				.replace(/<\/code>/, '</code></pre>');
+
+						return '<div id="message-'+$c_id+'">' + text + '</div>';
 					});
 
 					$(this).text('edit').removeClass().addClass('-edit');
@@ -157,7 +222,9 @@
 		    			.replace(/\<\/blockquote\>/g, '[/blockquote]')
 		    			.replace(/\<strong\>/g, '[user]')
 		    			.replace(/\<\/strong\>/g, '[/user]')
-		    			.replace(/\<br\>/g, '\r\n');
+		    			.replace(/\<br\>/g, '\r\n')
+		    			.replace(/<pre>/, '')
+		    			.replace(/<\/pre>/, '');
 
 					$('#reply #message').removeClass('active').addClass('active');
 
@@ -192,6 +259,21 @@
 					var cid = idSplit[1];
 
 					app.removeMember(username, cid);
+				})
+				.on('click', '.-btn-bold', function(e) {
+					e.preventDefault();
+					
+					app.wrapText('textarea#message','[bold]','[/bold]');
+				})
+				.on('click', '.-btn-italic', function(e) {
+					e.preventDefault();
+
+					app.wrapText('textarea#message','[italic]','[/italic]');
+				})
+				.on('click', '.-btn-code', function(e) {
+					e.preventDefault();
+
+					app.wrapText('textarea#message','[code]','[/code]');
 				})
 	};
 

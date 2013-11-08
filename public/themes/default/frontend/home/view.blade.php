@@ -105,6 +105,7 @@
                         <div class="info">
                                  <a href="{{ route('members_profile', Provider::getAcl()->getUser()->username) }}" class="poster"><strong>{{ Provider::getAcl()->getUser()->username }}</strong></a>
                             <span class="muted">{{ $post->created_at->diffForHumans() }} {{ (Provider::getAcl()->getUser()->profile) ? Provider::getAcl()->getUser()->profile->location : 'unavailable location' }}</span>
+
                             <input type="submit" class="btn pull-right" value="Post a Reply">
                         </div>
                         <hr />
@@ -112,6 +113,9 @@
                         {{ Form::hidden('conversation_id', $post->conversation_id) }}
                         {{ Form::textarea('message', '', array('class' => 'span12', 'id' => 'message')) }}
                         </div>
+                        <a class="btn btn-small -btn-bold">bold</a>
+                        <a class="btn btn-small -btn-italic">italic</a>
+                        <a class="btn btn-small -btn-code">code</a>
                     </div>
                 </div>
                 {{ Form::close() }}

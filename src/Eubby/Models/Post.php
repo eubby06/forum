@@ -78,6 +78,15 @@ class Post extends Base
 				$ustat->increment('conversations_participated_count');
 			}
 		});
+
+		static::deleted(function($post)
+		{
+			if ($post->id == $post->conversation->last_post_id)
+			{
+				$post->conversation->active = 0;
+				$post->conversation->save();
+			}
+		});
 	}
 
 	public function notify()
@@ -156,7 +165,7 @@ class Post extends Base
 
 				$message = str_replace(
 								array($quote[0],'[/quote]'), 
-								array('[blockquote][user]' . $username . '[/user] ','[/blockquote]'), 
+								array('[blockquote][strong]' . $username . '[/strong] ','[/blockquote]'), 
 								$message);
 	
 				return $message;
@@ -167,4 +176,5 @@ class Post extends Base
 
 		return false;
 	}
+
 }

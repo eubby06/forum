@@ -202,6 +202,11 @@ Route::group(array('prefix' => 'forum'), function()
 		'as' 	=> 'ajax_posts_delete',
 		'uses' 	=> 'Eubby\Controllers\PostsController@postAjaxDelete'
 		));
+
+	Route::post('posts/ajaxupdate', array(
+		'as' 	=> 'ajax_posts_update',
+		'uses' 	=> 'Eubby\Controllers\PostsController@postAjaxUpdate'
+		));
 });
 
 
