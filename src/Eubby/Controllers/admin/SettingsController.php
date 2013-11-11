@@ -6,7 +6,7 @@ class SettingsController extends AdminController
 {
 	public function getIndex()
 	{
-		$settings = $this->provider->getSettings()->find(1);
+		$settings = $this->getObject('settings')->find(1);
 
 		$this->layout->content = View::make("theme::{$this->theme}.backend.settings")
 									->with('settings', $settings);
@@ -15,7 +15,7 @@ class SettingsController extends AdminController
 
 	public function postUpdate()
 	{
-		$settings = $this->provider->getSettings()->find(1);
+		$settings = $this->getObject('settings')->find(1);
 
 		$data = array(
 			'title' => Input::get('title'),

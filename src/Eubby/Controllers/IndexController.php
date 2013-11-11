@@ -6,8 +6,7 @@ class IndexController extends BaseController
 {
 	public function getIndex()
 	{
-
-		$this->provider->getNotifier()->setUser($this->provider->getAcl()->getUser());
+		$this->getObject('notifier')->setUser($this->getObject('acl')->getUser());
 
 		$keywords = (Input::get('keywords')) ? strtolower(Input::get('keywords')) : null;
 		$searchError = false; //this allows us to display diff message in the view
@@ -15,7 +14,7 @@ class IndexController extends BaseController
 		if( is_null($keywords))
 		{
 			//get all conversations in this forum
-			$conversations 		= $this->provider->getConversation()
+			$conversations 		= $this->getObject('conversation')
 												 ->where('active', 1)
 												 ->orderby('updated_at', 'desc')
 												 ->get();
@@ -26,7 +25,7 @@ class IndexController extends BaseController
 			$searchError 		= true;
 			
 			//get all conversations in this forum
-			$conversations 		= $this->provider->getConversation()
+			$conversations 		= $this->getObject('conversation')
 												 ->where('active', 1)
 												 ->where('title','LIKE', '%'.$keywords.'%')
 												 ->orderby('updated_at', 'desc')
@@ -38,23 +37,23 @@ class IndexController extends BaseController
 		$unread_count 		= 0;
 
 		//update read/unread posts
-		if ($this->provider->getAcl()->check()) 
+		if ($this->getObject('acl')->check()) 
 		{
 			//loop through all conversations
 			for ($i=0; $i<$conversations->count(); $i++)
 				{
-					$channel = $this->provider->getChannel()->withTrashed()->where('id','=',$conversations[0]->channel_id)->first();
+					$channel = $this->getObject('channel')->withTrashed()->where('id','=',$conversations[0]->channel_id)->first();
 
 					//check if this conversation belongs to active channel, exclude if it belongs to deleted channel
 					if (is_null($channel->deleted_at))
 					{
 						//get user last visit date to get unread posts in this conversation
-						$last_visit = $this->provider->getAcl()->lastVisit($conversations[$i]);
+						$last_visit = $this->getObject('acl')->lastVisit($conversations[$i]);
 						$conversations[$i]->unread = $conversations[$i]->unreadPostsCount($last_visit);				
 					}
 					else
 					{
-						// if channel has been deleted, then unset this
+						//if channel has been deleted, then unset this
 						unset($conversations[$i]);
 					}
 				}

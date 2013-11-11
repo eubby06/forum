@@ -9,7 +9,7 @@ class NotificationsController extends BaseController
 
 		if ($nid)
 		{
-			if ($this->provider->getNotifier()->removeNotification($nid))
+			if ($this->getObject('notifier')->removeNotification($nid))
 			{
 				return Redirect::back()->with('success', 'Notification has been removed.');	
 			}	
@@ -24,7 +24,7 @@ class NotificationsController extends BaseController
 
 		if ($nid)
 		{
-			if ($this->provider->getNotifier()->hideNotification($nid))
+			if ($this->getObject('notifier')->hideNotification($nid))
 			{
 				return Redirect::back()->with('success', 'Notification has been hidden.');		
 			}	
@@ -40,7 +40,7 @@ class NotificationsController extends BaseController
 
 		if ($nid)
 		{
-			if ($this->provider->getNotifier()->removeNotification($nid))
+			if ($this->getObject('notifier')->removeNotification($nid))
 			{
 				return Response::json(array('result' => 'success', 'message' => 'Notification has been removed.'));	
 			}	
@@ -56,7 +56,7 @@ class NotificationsController extends BaseController
 
 		if ($nid)
 		{
-			if ($this->provider->getNotifier()->hideNotification($nid))
+			if ($this->getObject('notifier')->hideNotification($nid))
 			{
 				return Response::json(array('result' => 'success', 'message' => 'Notification has been hidden.'));	
 			}	

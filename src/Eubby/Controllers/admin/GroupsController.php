@@ -6,7 +6,7 @@ class GroupsController extends AdminController
 {
 	public function getIndex()
 	{	
-		$groups = $this->provider->getGroup()->all();
+		$groups = $this->getObject('group')->all();
 
 		$this->layout->content = View::make("theme::{$this->theme}.backend.groups.index")
 									->with('groups', $groups);
@@ -24,24 +24,24 @@ class GroupsController extends AdminController
 		$group_data = array(
 				'name' => Input::get('name'),
 				'moderator' => (Input::get('can_moderate')) ? 1 : 0,
-				'parent_group_id' => $this->provider->getGroup()->where('name', ucfirst($this->provider->getGroup()->extendable_group))->first()->id
+				'parent_group_id' => $this->getObject('group')->where('name', ucfirst($this->getObject('group')->extendable_group))->first()->id
 			);
 
-		if ($this->provider->getGroup()->isValid($group_data))
+		if ($this->getObject('group')->isValid($group_data))
 		{
-			$this->provider->getGroup()->create($group_data);
+			$this->getObject('group')->create($group_data);
 
 			return Redirect::route('admin_groups')->with('success', 'Group has been created.');
 		}
 
-		return Redirect::back()->withErrors($this->provider->getGroup()->validationErrors());
+		return Redirect::back()->withErrors($this->getObject('group')->validationErrors());
 	}
 
 	public function getEdit($gid = null)
 	{
 		if (is_null($gid)) return Redirect::back();
 
-		$group = $this->provider->getGroup()->find($gid);
+		$group = $this->getObject('group')->find($gid);
 
 		if ($group)
 		{
@@ -57,7 +57,7 @@ class GroupsController extends AdminController
 	{
 		if (is_null($gid)) return Redirect::back();
 
-		$group = $this->provider->getGroup()->find($gid);
+		$group = $this->getObject('group')->find($gid);
 		$group_data = array(
 							'name' => Input::get('name'),
 							'moderator' => (Input::get('can_moderate')) ? 1 : 0
@@ -66,9 +66,9 @@ class GroupsController extends AdminController
 		{
 			if ($group->name != Input::get('name'))
 			{
-				if (!$this->provider->getGroup()->isValid($group_data))
+				if (!$this->getObject('group')->isValid($group_data))
 				{
-					return Redirect::back()->withErrors($this->provider->getGroup()->validationErrors());
+					return Redirect::back()->withErrors($this->getObject('group')->validationErrors());
 				}
 			}
 
@@ -84,7 +84,7 @@ class GroupsController extends AdminController
 	{
 		if (is_null($gid)) return Redirect::back();
 
-		$group = $this->provider->getGroup()->find($gid);
+		$group = $this->getObject('group')->find($gid);
 
 		if ($group)
 		{

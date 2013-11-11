@@ -11,11 +11,37 @@ class AdminController extends Controller {
 
 	protected $layout 			= null;
 
+	protected $objects 			= array();
+
+
 	public function __construct(ProviderInterface $provider)
 	{
 		$this->provider 	= $provider;
 		$this->theme 		= $this->provider->getSettings()->find(1)->theme;
 		$this->layout 		= "theme::{$this->theme}.layouts.admin";
+	}
+
+	public function setObject($object)
+	{
+		$getObject = 'get' . ucfirst($object);
+
+		$this->objects[$object] = $this->provider->$getObject();
+	}
+
+	public function getObject($object)
+	{
+		if (isset($this->objects[$object]))
+		{
+			$object = $this->objects[$object];
+		}
+		else
+		{
+			$getObject = 'get' . ucfirst($object);
+
+			$object = $this->provider->$getObject();
+		}
+		
+		return $object;
 	}
 
 	protected function setupLayout()
@@ -31,10 +57,10 @@ class AdminController extends Controller {
 	{
 		$stats = array();
 
-		$stats['online'] 			= $this->provider->getSession()->where('active','=',1)->get()->count();
-		$stats['members']			= $this->provider->getUser()->all()->count();
-		$stats['posts'] 			= $this->provider->getPost()->all()->count();
-		$stats['conversations'] 	= $this->provider->getConversation()->all()->count();	
+		$stats['online'] 			= $this->getObject('session')->where('active','=',1)->get()->count();
+		$stats['members']			= $this->getObject('user')->all()->count();
+		$stats['posts'] 			= $this->getObject('post')->all()->count();
+		$stats['conversations'] 	= $this->getObject('conversation')->all()->count();	
 
 		$this->layout->statistics = View::make("theme::{$this->theme}.__partials.statistics")
 									->with('stats', $stats);

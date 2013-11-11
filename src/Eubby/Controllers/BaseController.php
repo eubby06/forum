@@ -14,12 +14,37 @@ abstract class BaseController extends Controller {
 	
 	protected $provider 		= null;
 
+	protected $objects 			= array();
+
 
 	public function __construct(ProviderInterface $provider)
 	{
 		$this->provider 	= $provider;
 		$this->theme 		= $this->provider->getSettings()->find(1)->theme;
 		$this->layout 		= "theme::{$this->theme}.layouts.single_column";
+	}
+
+	public function setObject($object)
+	{
+		$getObject = 'get' . ucfirst($object);
+
+		$this->objects[$object] = $this->provider->$getObject();
+	}
+
+	public function getObject($object)
+	{
+		if (isset($this->objects[$object]))
+		{
+			$object = $this->objects[$object];
+		}
+		else
+		{
+			$getObject = 'get' . ucfirst($object);
+
+			$object = $this->provider->$getObject();
+		}
+		
+		return $object;
 	}
 
 	protected function setupLayout()

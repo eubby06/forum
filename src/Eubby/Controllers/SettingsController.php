@@ -7,9 +7,9 @@ class SettingsController extends BaseController
 	public function getProfile()
 	{
 
-		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
+		if (!$this->getObject('acl')->check()) return Redirect::route('login');
 
-		$user = $this->provider->getAcl()->getUser();
+		$user = $this->getObject('acl')->getUser();
 		$profile = ($user->profile) ? $user->profile : new \Eubby\Models\Profile;
 
 		$select_notifications = array(
@@ -33,9 +33,9 @@ class SettingsController extends BaseController
 
 	public function postProfile()
 	{
-		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
+		if (!$this->getObject('acl')->check()) return Redirect::route('login');
 
-		$user = $this->provider->getAcl()->getUser();
+		$user = $this->getObject('acl')->getUser();
 		$profile = ($user->profile) ? $user->profile : new \Eubby\Models\Profile;
 
 		$profile->user_id = $user->id;
@@ -51,7 +51,7 @@ class SettingsController extends BaseController
 
 	public function getPassword()
 	{
-		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
+		if (!$this->getObject('acl')->check()) return Redirect::route('login');
 
 		$this->layout->content = View::make("theme::{$this->theme}.frontend.user.password_settings");
 
@@ -60,9 +60,9 @@ class SettingsController extends BaseController
 
 	public function postPassword()
 	{
-		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
+		if (!$this->getObject('acl')->check()) return Redirect::route('login');
 
-		$user = $this->provider->getAcl()->getUser();
+		$user = $this->getObject('acl')->getUser();
 		
 		//check if current password is correct
 		if (!Hash::check(Input::get('current_password'), $user->password))
@@ -111,9 +111,9 @@ class SettingsController extends BaseController
 
 	public function getNotifications()
 	{
-		if (!$this->provider->getAcl()->check()) return Redirect::route('login');
+		if (!$this->getObject('acl')->check()) return Redirect::route('login');
 
-		$user = $this->provider->getAcl()->getUser();
+		$user = $this->getObject('acl')->getUser();
 
 		$notifications = $user->notifications()->where('hidden','=',0)->paginate(2);
 

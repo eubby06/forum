@@ -222,6 +222,10 @@
 		    			.replace(/\<\/blockquote\>/g, '[/blockquote]')
 		    			.replace(/\<strong\>/g, '[user]')
 		    			.replace(/\<\/strong\>/g, '[/user]')
+		    			.replace(/<code\s[\w-="\s]*>/g, '[code]')
+		    			.replace(/<\/code>/g, '[/code]')
+		    			.replace(/<span\s[\w-="\s]*>/g, ' ')
+		    			.replace(/<\/span>/g, ' ')
 		    			.replace(/\<br\>/g, '\r\n')
 		    			.replace(/<pre>/, '')
 		    			.replace(/<\/pre>/, '');

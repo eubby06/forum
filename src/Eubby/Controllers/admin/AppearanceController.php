@@ -6,7 +6,7 @@ class AppearanceController extends AdminController
 {
 	public function getIndex()
 	{
-		$settings = $this->provider->getSettings()->find(1);
+		$settings = $this->getObject('settings')->find(1);
 
 		$this->layout->content = View::make("theme::{$this->theme}.backend.appearance")
 										->with('settings', $settings);
@@ -15,7 +15,7 @@ class AppearanceController extends AdminController
 
 	public function postIndex()
 	{
-		$settings = $this->provider->getSettings()->find(1);
+		$settings = $this->getObject('settings')->find(1);
 
 		$settings->update(array('theme' => Input::get('theme')));
 
