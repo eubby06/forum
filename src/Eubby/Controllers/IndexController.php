@@ -6,6 +6,7 @@ class IndexController extends BaseController
 {
 	public function getIndex()
 	{
+
 		$this->getObject('notifier')->setUser($this->getObject('acl')->getUser());
 
 		$keywords = (Input::get('keywords')) ? strtolower(Input::get('keywords')) : null;

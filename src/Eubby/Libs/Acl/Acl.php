@@ -1,6 +1,6 @@
 <?php namespace Eubby\Libs\Acl;
 
-use Auth, DB;
+use Auth, DB, Provider;
 use Eubby\Models\Conversation;
 
 class Acl implements AccessControlInterface
@@ -10,17 +10,29 @@ class Acl implements AccessControlInterface
 
 	protected $auth = null;
 
+
 	public function __construct()
 	{
 		$this->auth = Auth::getFacadeRoot();
+	}
+
+	public function getAuthObj()
+	{
+		return $this->auth;
+	}
+
+	public function setUser($object)
+	{
+		$this->user = $object;
 	}
 
 	public function getUser()
 	{
 		if (is_null($this->user))
 		{
-			$this->user = $this->auth->user();
+			return Auth::user();
 		}
+
 		return $this->user;
 	}
 
