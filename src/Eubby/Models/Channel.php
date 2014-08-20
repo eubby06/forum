@@ -1,17 +1,20 @@
 <?php namespace Eubby\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Eubby\Models\Base;
 use Eubby\Models\ForumStats;
 
 class Channel extends Base
 {
+	use SoftDeletingTrait;
+
 	protected $table 			= 'channels';
 
 	public $timestamps 			= false;
 
-	protected $softDelete 		= true;
-
 	protected $guarded 			= array('id');
+
+	protected $dates = ['deleted_at'];
 
 	protected $validation_rules = array(
 		'name' 			=> 'required|unique:channels', 

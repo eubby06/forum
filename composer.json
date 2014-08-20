@@ -9,10 +9,10 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.0.x",
-        "orchestra/testbench": "2.0.*",
-        "phpunit/phpunit": "3.7.*",
-        "mockery/mockery": "dev-master"
+        "illuminate/support": "4.2.*",
+        "orchestra/testbench": "2.2.*",
+        "phpunit/phpunit": "4.2.*",
+        "mockery/mockery": "0.9.*"
     },
     "autoload": {
         "classmap": [

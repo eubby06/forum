@@ -8,6 +8,8 @@ class UserStats extends Base
 	protected $table 		= 'user_stats';
 
 	public $timestamps 		= false;
+	
+	protected $guarded = array();
 
 	public function user()
 	{
