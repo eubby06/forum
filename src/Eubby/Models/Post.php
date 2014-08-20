@@ -1,5 +1,6 @@
 <?php namespace Eubby\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Eubby\Models\Base;
 use Eubby\Models\ForumStats;
 use Eubby\Models\UserStats;
@@ -7,11 +8,14 @@ use Eubby\Models\Post;
 use Eubby\Models\History;
 use App, Acl;
 
+
 class Post extends Base
 {
+	use SoftDeletingTrait;
+
 	protected $table 			= 'posts';
 
-	protected $softDelete 		= true;
+	protected $dates = ['deleted_at'];
 
 	protected $guarded 			= array('id');
 

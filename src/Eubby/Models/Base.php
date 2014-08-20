@@ -16,6 +16,7 @@ abstract class Base extends Model {
 	protected $validation_object 			= false;
 
 
+
 	public function setTableName($name)
 	{
 		$this->table = $name;

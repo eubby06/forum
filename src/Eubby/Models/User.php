@@ -2,6 +2,7 @@
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Eubby\Models\Base;
 use Hash;
 use Auth;
@@ -10,7 +11,8 @@ use DB;
 
 class User extends Base implements UserInterface, RemindableInterface {
 
-
+	use SoftDeletingTrait;
+	
 	protected $table 			= 'users';
 
 	protected $validation_rules = array(
@@ -25,7 +27,8 @@ class User extends Base implements UserInterface, RemindableInterface {
 		'ip_address',
 	);
 
-	protected $softDelete 		= true;
+	
+	protected $dates = ['deleted_at'];
 
 	protected $hidden 			= array('password');
 
@@ -201,4 +204,18 @@ class User extends Base implements UserInterface, RemindableInterface {
 		return $this->email;
 	}
 
+	public function getRememberToken()
+	{
+    		return $this->remember_token;
+	}
+
+	public function setRememberToken($value)
+	{
+		$this->remember_token = $value;
+	}
+
+	public function getRememberTokenName()
+	{
+		return 'remember_token';
+	}
 }

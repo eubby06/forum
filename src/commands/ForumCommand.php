@@ -56,8 +56,8 @@ class ForumCommand extends Command {
 
 			$this->info('Installing... Please wait...');
 
-			$this->call('asset:publish',array('--bench'=>'eubby/forum'));
-			$this->call('migrate', array('--bench'=>'eubby/forum'));
+			$this->call('asset:publish',array('eubby/forum'));
+			$this->call('migrate', array('--package' => 'eubby/forum'));
 			$this->call('db:seed', array('--class'=>'ForumDatabaseSeeder'));
 
 			$this->seedUser($username, $password);

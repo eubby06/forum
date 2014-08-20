@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration {
 			$table->string('username');
 			$table->string('password');
 			$table->string('ip_address');
+			$table->string('remember_token');
 			$table->enum('active', array('0','1'))->default(0);
 			$table->timestamps();
 			$table->softDeletes();
